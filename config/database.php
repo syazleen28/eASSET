@@ -1,14 +1,16 @@
 <?php
-$host = "localhost";
-$dbname = "eassets_db";
-$username = "root";
-$password = "";
+$host = 'localhost';
+$db   = 'eassets_db';
+$user = 'root';
+$pass = '';
 
 try {
-    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-    exit();
+    $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
 }
 ?>

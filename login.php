@@ -1,29 +1,37 @@
 <?php
 session_start();
-require_once 'config/database.php';
+require_once 'config/database.php'; // provides $pdo
 
 $error = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $userid = $_POST['userid'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $userid   = trim($_POST['userid'] ?? '');
     $password = $_POST['password'] ?? '';
 
-    // Fetch user by userid
-    $stmt = $conn->prepare("SELECT * FROM users WHERE userid = ?");
-    $stmt->execute([$userid]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($userid !== '' && $password !== '') {
 
-    if ($user && password_verify($password, $user['password'])) {
-        // Login success
-        $_SESSION['userid'] = $user['userid'];
-        $_SESSION['fullname'] = $user['fullname'];
-        header('Location: dashboard.php');
-        exit();
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE userid = ?");
+        $stmt->execute([$userid]);
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($password, $user['password'])) {
+            session_regenerate_id(true);
+
+            $_SESSION['userid']   = $user['userid'];
+            $_SESSION['fullname'] = $user['fullname'];
+
+            header("Location: dashboard.php");
+            exit;
+        } else {
+            $error = "Invalid User ID or password";
+        }
+
     } else {
-        $error = 'Invalid User ID or password';
+        $error = "Please fill in all fields";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
