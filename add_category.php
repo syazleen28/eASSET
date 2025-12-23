@@ -2,6 +2,12 @@
 session_start();
 require_once 'config/database.php';
 
+// Optional: protect page
+if (!isset($_SESSION['userid'])) {
+     header("Location: login.php");
+     exit();
+ }
+
 $errors = [];
 $category_name = '';
 $description = '';
@@ -11,14 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category_name = trim($_POST['category_name'] ?? '');
     $description   = trim($_POST['description'] ?? '');
 
-    // Validation
+    // === VALIDATION ===
     if ($category_name === '') {
         $errors['category_name'] = "Category Name is required.";
     } elseif (strlen($category_name) < 3) {
         $errors['category_name'] = "Category Name must be at least 3 characters.";
     }
 
-    // Duplicate check
+    // === DUPLICATE CHECK ===
     if (!isset($errors['category_name'])) {
         $check = $pdo->prepare(
             "SELECT COUNT(*) FROM asset_categories WHERE category_name = :category_name"
@@ -30,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Insert if no errors
+    // === INSERT DATA ===
     if (empty($errors)) {
         $stmt = $pdo->prepare(
             "INSERT INTO asset_categories (category_name, description)
@@ -41,10 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':description'   => $description
         ]);
 
-        $category_id = $pdo->lastInsertId();
+        $id = $pdo->lastInsertId();
 
-        header("Location: view_category.php?id=$category_id&success=1");
-        exit();
+header("Location: view_category.php?id=" . $id . "&success=1");
+exit();
+
+
     }
 }
 ?>
@@ -59,6 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link href="assets/images/style.css" rel="stylesheet">
+<style>
+  /* Resize the confirmation modal */
+  #confirmModal .modal-dialog {
+      max-width: 350px; /* adjust this width as needed */
+  }
+</style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -71,11 +85,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="main-content">
 
     <div class="mb-4">
-        <h4>CONFIGURATION &gt; Asset Category &gt; New Record</h4>
+        <h5>CONFIGURATION &gt; Asset Category &gt; New Record</h5>
     </div>
 
-    <form method="post" id="categoryForm">
+    <form method="post" id="categoryForm" novalidate>
 
+        <!-- CATEGORY NAME -->
         <div class="mb-3 row">
             <label class="col-sm-2 col-form-label">
                 Category Name <span class="text-danger">*</span> :
@@ -83,18 +98,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col-sm-10">
                 <input type="text"
                        name="category_name"
-                       class="form-control"
+                       class="form-control <?= isset($errors['category_name']) ? 'is-invalid' : '' ?>"
                        value="<?= htmlspecialchars($category_name) ?>">
 
-                <!-- INLINE ERROR MESSAGE -->
                 <?php if (isset($errors['category_name'])): ?>
-                    <div style="color:red; font-size:13px;">
+                    <div class="invalid-feedback">
                         <?= htmlspecialchars($errors['category_name']) ?>
                     </div>
                 <?php endif; ?>
             </div>
         </div>
 
+        <!-- DESCRIPTION -->
         <div class="mb-3 row">
             <label class="col-sm-2 col-form-label">Description :</label>
             <div class="col-sm-10">
@@ -104,9 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
+        <!-- BUTTONS -->
         <div class="row">
             <div class="col-sm-10 offset-sm-2 text-end">
-                <a href="config_category.php" class="btn btn-secondary">Back</a>
+                <a href="config_category.php" class="btn btn-secondary">
+                    Back
+                </a>
+
                 <button type="button"
                         class="btn btn-primary"
                         data-bs-toggle="modal"
@@ -119,12 +138,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <!-- CONFIRM MODAL -->
+ 
 <div class="modal fade" id="confirmModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body text-center">
-        <i class="bi bi-exclamation-circle fs-1 text-warning"></i>
-        <p class="mt-3">Are you sure to save?</p>
+        <i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>
+
+        <p class="mt-3">Are you sure you want to save?</p>
 
         <button type="button" class="btn btn-primary" id="confirmSave">
             Save
@@ -136,13 +157,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
 </div>
-
+<?php include 'includes/footer.php'; ?>
 <script>
+// Submit form after confirmation
 document.getElementById('confirmSave').addEventListener('click', function () {
     document.getElementById('categoryForm').submit();
 });
-</script>
-<script>
+
+// Remove error highlight when typing
 document.querySelector('input[name="category_name"]').addEventListener('input', function () {
     this.classList.remove('is-invalid');
 });

@@ -2,21 +2,26 @@
 session_start();
 require_once 'config/database.php';
 
+// Protect page
 if (!isset($_SESSION['userid'])) {
-    header("Location: ../login.php");
+    header("Location: login.php");
     exit();
 }
 
-// validate ID
+// Validate ID
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     header("Location: config_category.php");
     exit();
 }
 
-$id = $_GET['id'];
+$id = (int) $_GET['id'];
 
-// fetch category
-$stmt = $pdo->prepare("SELECT * FROM asset_categories WHERE id = :id");
+// Fetch category
+$stmt = $pdo->prepare(
+    "SELECT id, category_name, description 
+     FROM asset_categories 
+     WHERE id = :id"
+);
 $stmt->execute([':id' => $id]);
 $category = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -25,7 +30,7 @@ if (!$category) {
     exit();
 }
 
-// success flag
+// Success flag
 $showSuccess = (isset($_GET['success']) && $_GET['success'] == 1);
 ?>
 
@@ -52,49 +57,68 @@ $showSuccess = (isset($_GET['success']) && $_GET['success'] == 1);
 
     <!-- SUCCESS MESSAGE -->
     <?php if ($showSuccess): ?>
-    <div class="alert alert-success d-flex align-items-center mb-3">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        <div>
-            <strong>Successful</strong><br>
-            Data saved successfully !
+        <div class="alert alert-success d-flex align-items-center mb-3">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <div>
+                <strong>Successful</strong><br>
+                Data saved successfully!
+            </div>
         </div>
-    </div>
     <?php endif; ?>
 
     <div class="mb-4">
-        <h4>CONFIGURATION &gt; Asset Category &gt; View</h4>
+        <h5>CONFIGURATION &gt; Asset Category &gt; View</h5>
     </div>
 
     <div class="card">
         <div class="card-body">
 
+            <!-- CATEGORY NAME -->
             <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label fw-bold">Category Name :</label>
+                <label class="col-sm-2 col-form-label fw-bold">
+                    Category Name :
+                </label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" value="<?= htmlspecialchars($category['category_name']) ?>" readonly>
+                    <input type="text"
+                           class="form-control"
+                           value="<?= htmlspecialchars($category['category_name']) ?>"
+                           readonly>
                 </div>
             </div>
 
+            <!-- DESCRIPTION -->
             <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label fw-bold">Description :</label>
+                <label class="col-sm-2 col-form-label fw-bold">
+                    Description :
+                </label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" rows="4" readonly><?= htmlspecialchars($category['description']) ?></textarea>
+                    <textarea class="form-control"
+                              rows="4"
+                              readonly><?= htmlspecialchars($category['description']) ?></textarea>
                 </div>
             </div>
 
+            <!-- ACTION BUTTONS -->
             <div class="text-end">
-                <a href="edit_category.php?id=<?= $category['id'] ?>" class="btn btn-primary">Update</a>
-                <a href="delete_category.php?id=<?= $category['id'] ?>" 
-                   class="btn btn-danger"
-                   onclick="return confirm('Are you sure to delete this category?');">
-                   Delete
+                <a href="edit_category.php?id=<?= $category['id'] ?>" class="btn btn-primary">
+                    Update
                 </a>
-                <a href="config_category.php" class="btn btn-secondary">Back</a>
+
+                <button class="btn btn-danger" 
+        data-id="<?= $category['id'] ?>" 
+        data-bs-toggle="modal" 
+        data-bs-target="#deleteModal">
+    Delete
+</button>
+
+
+                <a href="config_category.php" class="btn btn-secondary">
+                    Back
+                </a>
             </div>
 
         </div>
     </div>
-
 </div>
 
 <!-- AUTO HIDE SUCCESS MESSAGE -->
@@ -103,6 +127,32 @@ setTimeout(() => {
     const alert = document.querySelector('.alert-success');
     if (alert) alert.style.display = 'none';
 }, 3000);
+</script>
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <i class="bi bi-exclamation-triangle fs-1 text-danger"></i>
+        <p class="mt-3">Are you sure to delete this category?</p>
+
+        <form method="post" action="delete_category.php">
+            <input type="hidden" name="delete_id" id="deleteId">
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<?php include 'includes/footer.php'; ?>
+<script>
+// When Delete button is clicked, pass the category ID to the modal
+const deleteBtn = document.querySelector('button[data-bs-target="#deleteModal"]');
+deleteBtn.addEventListener('click', () => {
+    const id = deleteBtn.getAttribute('data-id');
+    document.getElementById('deleteId').value = id;
+});
 </script>
 
 </body>
