@@ -138,26 +138,27 @@ exit();
 </div>
 
 <!-- CONFIRM MODAL -->
- 
-<div class="modal fade" id="confirmModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-body text-center">
-        <i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>
+    <div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+        <div class="modal-body text-center">
+            <i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>
 
-        <p class="mt-3">Are you sure you want to save?</p>
+            <p class="mt-3">Are you sure you want to save?</p>
 
-        <button type="button" class="btn btn-primary" id="confirmSave">
-            Save
-        </button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            Back
-        </button>
-      </div>
+            <button type="button" class="btn btn-primary" id="confirmSave">
+                Save
+            </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Back
+            </button>
+        </div>
+        </div>
     </div>
-  </div>
-</div>
+    </div>
+
 <?php include 'includes/footer.php'; ?>
+
 <script>
 // Submit form after confirmation
 document.getElementById('confirmSave').addEventListener('click', function () {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 22, 2025 at 10:52 AM
+-- Generation Time: Dec 23, 2025 at 10:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,9 +39,16 @@ CREATE TABLE `asset_categories` (
 --
 
 INSERT INTO `asset_categories` (`id`, `category_name`, `description`, `created_at`) VALUES
-(1, 'Laptop', 'All types of laptops used by staff and students', '2025-12-22 08:10:24'),
-(2, 'Monitor', '1234', '2025-12-22 08:48:44'),
-(3, 'pc', 'we', '2025-12-22 09:16:14');
+(4, 'Desktop PCs / CPUs', 'Fixed computers used for office or personal use.', '2025-12-23 08:48:07'),
+(5, 'Laptops / Notebooks / Ultrabooks', 'Portable computers used for work.', '2025-12-23 08:48:26'),
+(6, 'All-in-One PC', 'Computers with built-in monitor and system unit.', '2025-12-23 08:48:42'),
+(7, 'Tablets', 'Portable touchscreen devices larger than smartphones.', '2025-12-23 08:49:03'),
+(8, 'Monitors', 'Computer screens used for work and display output.', '2025-12-23 08:49:12'),
+(9, 'TVs / Display Screens', 'Screens used for displaying video and visual content.', '2025-12-23 08:49:23'),
+(10, 'Camera & Multimedia Equipment', 'Devices used for capturing photos, videos, and media.', '2025-12-23 08:49:39'),
+(11, 'Network & Server Equipment', 'Devices used to manage networks and servers.', '2025-12-23 08:49:58'),
+(12, 'Audio & PA Systems', 'Equipment used for sound output and public announcements.', '2025-12-23 08:50:09'),
+(13, 'Mobile Devices / Smartphones', 'Handheld mobile phones used for communication and apps.', '2025-12-23 08:50:35');
 
 -- --------------------------------------------------------
 
@@ -92,7 +99,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `asset_categories`
 --
 ALTER TABLE `asset_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `users`

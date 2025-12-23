@@ -60,8 +60,7 @@ $showSuccess = (isset($_GET['success']) && $_GET['success'] == 1);
         <div class="alert alert-success d-flex align-items-center mb-3">
             <i class="bi bi-check-circle-fill me-2"></i>
             <div>
-                <strong>Successful</strong><br>
-                Data saved successfully!
+                <strong>Successful</strong><br>Data saved successfully!
             </div>
         </div>
     <?php endif; ?>
@@ -100,60 +99,50 @@ $showSuccess = (isset($_GET['success']) && $_GET['success'] == 1);
 
             <!-- ACTION BUTTONS -->
             <div class="text-end">
-                <a href="edit_category.php?id=<?= $category['id'] ?>" class="btn btn-primary">
-                    Update
-                </a>
-
-                <button class="btn btn-danger" 
-        data-id="<?= $category['id'] ?>" 
-        data-bs-toggle="modal" 
-        data-bs-target="#deleteModal">
-    Delete
-</button>
-
-
-                <a href="config_category.php" class="btn btn-secondary">
-                    Back
-                </a>
+                <a href="edit_category.php?id=<?= $category['id'] ?>" class="btn btn-primary">Update</a>
+                <button class="btn btn-danger" data-id="<?= $category['id'] ?>" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                <a href="config_category.php" class="btn btn-secondary">Back</a>
             </div>
-
         </div>
     </div>
 </div>
 
-<!-- AUTO HIDE SUCCESS MESSAGE -->
-<script>
-setTimeout(() => {
-    const alert = document.querySelector('.alert-success');
-    if (alert) alert.style.display = 'none';
-}, 3000);
-</script>
-<!-- DELETE CONFIRM MODAL -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-body text-center">
-        <i class="bi bi-exclamation-triangle fs-1 text-danger"></i>
-        <p class="mt-3">Are you sure to delete this category?</p>
+            <!-- DELETE CONFIRM MODAL -->
+            <div class="modal fade" id="deleteModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-body text-center">
+                    <i class="bi bi-exclamation-triangle fs-1 text-danger"></i>
+                    <p class="mt-3">Are you sure to delete this category?</p>
 
-        <form method="post" action="delete_category.php">
-            <input type="hidden" name="delete_id" id="deleteId">
-            <button type="submit" class="btn btn-danger">Delete</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<?php include 'includes/footer.php'; ?>
-<script>
-// When Delete button is clicked, pass the category ID to the modal
-const deleteBtn = document.querySelector('button[data-bs-target="#deleteModal"]');
-deleteBtn.addEventListener('click', () => {
-    const id = deleteBtn.getAttribute('data-id');
-    document.getElementById('deleteId').value = id;
-});
-</script>
+                    <form method="post" action="delete_category.php">
+                        <input type="hidden" name="delete_id" id="deleteId">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <?php include 'includes/footer.php'; ?>
+
+            <script>
+            // When Delete button is clicked, pass the category ID to the modal
+            const deleteBtn = document.querySelector('button[data-bs-target="#deleteModal"]');
+            deleteBtn.addEventListener('click', () => {
+                const id = deleteBtn.getAttribute('data-id');
+                document.getElementById('deleteId').value = id;
+            });
+            </script>
+            
+            <!-- AUTO HIDE SUCCESS MESSAGE -->
+            <script>
+            setTimeout(() => {
+                const alert = document.querySelector('.alert-success');
+                if (alert) alert.style.display = 'none';
+            }, 3000);
+            </script>
 
 </body>
 </html>

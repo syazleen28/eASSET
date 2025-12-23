@@ -142,3 +142,38 @@ body {
     background: #fdeaea;
     color: #dc3545;
 }
+.menu-group input {
+    display: none;
+}
+
+.menu-title {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    color: #fff;
+}
+
+.submenu {
+    display: none;
+    padding-left: 25px;
+}
+
+.menu-group input:checked ~ .submenu {
+    display: block;
+}
+
+.submenu a {
+    display: block;
+    padding: 8px 10px;
+    font-size: 14px;
+}
+
+.menu-group.open .submenu {
+    display: block;
+}
+
+.arrow {
+    font-size: 12px;
+}
