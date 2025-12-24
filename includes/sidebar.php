@@ -1,30 +1,43 @@
-<?php
-// Get the current page name
-$currentPage = basename($_SERVER['PHP_SELF']);
-?>
-
+<!-- SIDEBAR -->
 <div class="sidebar">
-    <a href="../dashboard.php" class="<?= $currentPage == 'dashboard.php' ? 'active' : '' ?>">
+
+    <a href="dashboard.php">
         <i class="bi bi-grid-fill"></i> Dashboard
     </a>
 
-    <a href="../config_category.php" class="<?= in_array($currentPage, ['config_category.php', 'add_category.php', 'edit_category.php', 'view_category.php']) ? 'active' : '' ?>">
-        <i class="bi bi-gear-fill"></i> Configuration
-    </a>
+    <!-- CONFIGURATION DROPDOWN -->
+    <div class="sidebar-item">
+        <a href="javascript:void(0)" class="dropdown-btn">
+            <i class="bi bi-gear-fill"></i> Configuration
+            <i class="bi bi-chevron-down float-end"></i>
+        </a>
 
-    <a href="../asset_list.php" class="<?= $currentPage == 'asset_list.php' ? 'active' : '' ?>">
-        <i class="bi bi-laptop-fill"></i> Assets
-    </a>
+        <div class="dropdown-container">
+            <a href="config_user.php">System User</a>
+            <a href="config_category.php">Asset Category</a>
+            <a href="config_supplier.php">Supplier</a>
+        </div>
+    </div>
+        <a href="index_asset.php">
+                <i class="bi bi-laptop-fill"></i> Assets
+            </a>
 
-    <a href="../allocation.php" class="<?= $currentPage == 'allocation.php' ? 'active' : '' ?>">
-        <i class="bi bi-arrow-repeat"></i> Allocation
-    </a>
-
-    <a href="../maintenance.php" class="<?= $currentPage == 'maintenance.php' ? 'active' : '' ?>">
+    <a href="index_maintenance.php">
         <i class="bi bi-tools"></i> Maintenance
     </a>
 
-    <a href="../report.php" class="<?= $currentPage == 'report.php' ? 'active' : '' ?>">
+    <a href="index_report.php">
         <i class="bi bi-bar-chart-fill"></i> Report
     </a>
 </div>
+</div>
+<script>
+document.querySelectorAll(".dropdown-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+        this.classList.toggle("active");
+        let dropdown = this.nextElementSibling;
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    });
+});
+</script>
+

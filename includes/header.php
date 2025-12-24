@@ -6,10 +6,12 @@
     </a>
     <div class="ms-auto d-flex align-items-center">
         <span>
-            Welcome, <?= htmlspecialchars($_SESSION['fullname']); ?>
+            Welcome!
         </span>
         <a href="logout.php" class="btn btn-outline-light btn-sm">
             Logout
         </a>
     </div>
 </nav>
+<link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css">
+<link rel="stylesheet" href="assets/css/sidebar.css"> <!-- your sidebar CSS -->

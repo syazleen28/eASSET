@@ -84,10 +84,26 @@ body {
 
 .sidebar a:hover {
     background: rgba(255,255,255,0.2);
+     color: #fff;
 }
 
 .sidebar i {
     margin-right: 10px;
+}
+
+
+.sidebar-item .dropdown-btn {
+    cursor: pointer;
+}
+
+.dropdown-container {
+    display: none;
+    background-color: #2a2a40;
+}
+
+.dropdown-container a {
+    padding-left: 45px;
+    font-size: 14px;
 }
 
 /* --------------------- FOOTER --------------------- */
@@ -177,3 +193,4 @@ body {
 .arrow {
     font-size: 12px;
 }
+

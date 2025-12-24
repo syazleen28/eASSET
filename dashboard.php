@@ -2,12 +2,13 @@
 session_start();
 require_once 'config/database.php';
 
-if (!isset($_SESSION['userid'])) {
+// Correct session variable check
+if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-/* Dummy data (replace with DB queries later) */
+// Dummy metrics (replace with DB queries later)
 $available = 30;
 $inUse = 30;
 $broken = 30;
@@ -32,33 +33,12 @@ $recentAllocations = [
 <title>Dashboard | eAssets</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-<link href="assets/images/style.css" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<link href="assets/images/style.css" rel="stylesheet">
 <style>
-/* Dashboard-specific styles */
-.main-content {
-    margin-left: 240px;
-    padding: 90px 20px 20px;
-}
-
-.metrics-box {
-    background: #fff;
-    border-radius: 8px;
-    padding: 15px;
-    text-align: center;
-    font-weight: bold;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-
-.table-container {
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    margin-bottom: 1rem;
-}
+.main-content { margin-left: 240px; padding: 90px 20px 20px; }
+.metrics-box { background: #fff; border-radius: 8px; padding: 15px; text-align: center; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.table-container { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); margin-bottom: 1rem; }
 </style>
 </head>
 <body>
@@ -70,18 +50,10 @@ $recentAllocations = [
     <h3 class="mb-3">DASHBOARD</h3>
 
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="metrics-box">Available<br><span class="fs-4"><?= $available ?></span></div>
-        </div>
-        <div class="col-md-3">
-            <div class="metrics-box">In Use<br><span class="fs-4"><?= $inUse ?></span></div>
-        </div>
-        <div class="col-md-3">
-            <div class="metrics-box">Damaged<br><span class="fs-4"><?= $broken ?></span></div>
-        </div>
-        <div class="col-md-3">
-            <div class="metrics-box">Maintenance<br><span class="fs-4"><?= $maintenance ?></span></div>
-        </div>
+        <div class="col-md-3"><div class="metrics-box">Available<br><span class="fs-4"><?= $available ?></span></div></div>
+        <div class="col-md-3"><div class="metrics-box">In Use<br><span class="fs-4"><?= $inUse ?></span></div></div>
+        <div class="col-md-3"><div class="metrics-box">Damaged<br><span class="fs-4"><?= $broken ?></span></div></div>
+        <div class="col-md-3"><div class="metrics-box">Maintenance<br><span class="fs-4"><?= $maintenance ?></span></div></div>
     </div>
 
     <div class="table-container mb-4">
@@ -93,12 +65,7 @@ $recentAllocations = [
         <h5>Recent Asset Allocations</h5>
         <table class="table table-bordered">
             <thead>
-                <tr>
-                    <th>Asset</th>
-                    <th>Allocated To</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                </tr>
+                <tr><th>Asset</th><th>Allocated To</th><th>Date</th><th>Status</th></tr>
             </thead>
             <tbody>
                 <?php foreach ($recentAllocations as $row): ?>
@@ -114,8 +81,6 @@ $recentAllocations = [
     </div>
 </div>
 
-<?php include 'includes/footer.php'; ?>
-
 <script>
 new Chart(document.getElementById('assetsChart'), {
     type: 'bar',
@@ -128,10 +93,7 @@ new Chart(document.getElementById('assetsChart'), {
             { label: 'Maintenance', data: <?= json_encode($maintenanceData) ?>, backgroundColor: '#ff9800' }
         ]
     },
-    options: {
-        responsive: true,
-        scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }
-    }
+    options: { responsive: true, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
 });
 </script>
 

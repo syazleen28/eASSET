@@ -3,7 +3,7 @@ session_start();
 require_once 'config/database.php'; // PDO connection
 
 // Redirect to login if not logged in
-if (!isset($_SESSION['userid'])) {
+if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
@@ -189,7 +189,7 @@ deleteBtns.forEach(btn => {
         const id = btn.getAttribute('data-id');
         const name = btn.getAttribute('data-name');
         document.getElementById('deleteId').value = id;
-        document.getElementById('deleteMessage').innerText = `Are you sure you want to delete the category: "${name}"?`;
+        document.getElementById('deleteMessage').innerText = `Are you sure to delete?`;
     });
 });
 </script>

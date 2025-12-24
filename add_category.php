@@ -3,7 +3,7 @@ session_start();
 require_once 'config/database.php';
 
 // Optional: protect page
-if (!isset($_SESSION['userid'])) {
+if (!isset($_SESSION['user_id'])) {
      header("Location: login.php");
      exit();
  }
