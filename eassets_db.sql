@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 26, 2025 at 01:47 AM
+-- Generation Time: Dec 29, 2025 at 12:34 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -42,7 +42,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`admin_id`, `admin_name`, `email`, `position`, `user_id`, `password`, `status`) VALUES
-(1, 'NUR SYAZLEEN', 'admin@eassets.com', 'Administrator', 'AI220099', '$2y$10$xQpBBZhYoa8btm8jmyKH3.stBSwO3dmTy3ElnVz/OqSAQnJFP6oE2', 'active');
+(1, 'NUR FARAH BINTI AZMI', 'admin@eassets.com', 'Administrator', 'AI220099', '$2y$10$xQpBBZhYoa8btm8jmyKH3.stBSwO3dmTy3ElnVz/OqSAQnJFP6oE2', 'active');
 
 -- --------------------------------------------------------
 
@@ -52,30 +52,29 @@ INSERT INTO `admins` (`admin_id`, `admin_name`, `email`, `position`, `user_id`, 
 
 CREATE TABLE `assets` (
   `id` int(11) NOT NULL,
+  `asset_code` varchar(20) NOT NULL,
   `category_id` int(11) NOT NULL,
-  `asset_name` varchar(255) NOT NULL,
-  `asset_status` varchar(50) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `supplier` varchar(255) DEFAULT NULL,
-  `warranty` varchar(255) DEFAULT NULL,
-  `location` varchar(255) DEFAULT NULL,
-  `assigned_user` varchar(255) DEFAULT NULL,
-  `serial_number` varchar(255) DEFAULT NULL,
-  `brand` varchar(255) DEFAULT NULL,
-  `manufacture_date` date DEFAULT NULL,
+  `asset_status` varchar(30) DEFAULT 'Available',
+  `asset_name` varchar(150) NOT NULL,
+  `brand` varchar(100) DEFAULT NULL,
+  `serial_number` varchar(150) DEFAULT NULL,
+  `supplier` varchar(150) NOT NULL,
   `purchase_date` date DEFAULT NULL,
-  `purchase_cost` decimal(12,2) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `purchase_cost` decimal(10,2) DEFAULT NULL,
+  `manufacture_date` date DEFAULT NULL,
+  `warranty` varchar(100) DEFAULT NULL,
+  `location` varchar(150) DEFAULT NULL,
+  `assigned_user` varchar(150) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `assets`
 --
 
-INSERT INTO `assets` (`id`, `category_id`, `asset_name`, `asset_status`, `description`, `supplier`, `warranty`, `location`, `assigned_user`, `serial_number`, `brand`, `manufacture_date`, `purchase_date`, `purchase_cost`, `created_at`, `updated_at`) VALUES
-(1, 17, 'Dell Inspiron 15', 'Available', 'WER', 'ABC Technologies Sdn. Bhd', '2 Years', 'IT department', 'NAZ', 'SN123456', 'Dell', '2025-12-03', '2025-12-16', 400.00, '2025-12-24 09:01:01', '2025-12-24 09:01:01'),
-(2, 17, 'Dell Inspiron 15', 'Available', 'WER', 'ABC Technologies Sdn. Bhd', '2 Years', 'IT department', 'NAZ', 'SN123456', 'Dell', '2025-12-03', '2025-12-16', 400.00, '2025-12-24 09:10:09', '2025-12-24 09:10:09');
+INSERT INTO `assets` (`id`, `asset_code`, `category_id`, `asset_status`, `asset_name`, `brand`, `serial_number`, `supplier`, `purchase_date`, `purchase_cost`, `manufacture_date`, `warranty`, `location`, `assigned_user`, `description`, `created_at`) VALUES
+(2, 'AST-0001', 29, 'Available', 'Dell Inspiron 15', 'Dell', 'SN123456', 'ABC Technologies Sdn. Bhd', '2025-12-10', 5000.00, '2025-12-31', '2 Years', 'it department', 'NAZ', NULL, '2025-12-28 10:16:53');
 
 -- --------------------------------------------------------
 
@@ -95,13 +94,20 @@ CREATE TABLE `asset_categories` (
 --
 
 INSERT INTO `asset_categories` (`id`, `category_name`, `description`, `created_at`) VALUES
-(1, 'Laptop', 'All types of laptops used by staff', '2025-12-22 08:10:24'),
 (17, 'kkk', '', '2025-12-23 22:43:40'),
-(18, 'hhh', '', '2025-12-23 22:49:40'),
-(19, 'mmm', '', '2025-12-23 22:54:12'),
-(20, 'www', 'ss', '2025-12-24 01:39:04'),
-(21, 'qqq', '', '2025-12-24 01:42:03'),
-(22, 'eees', '', '2025-12-24 01:43:22');
+(27, 'Desktop Computer', 'A stationary computer used for office work, data processing, and daily operations. Examples: CPU, monitor, keyboard, mouse.', '2025-12-28 06:13:35'),
+(28, 'Laptop / Notebook', 'A portable computer used for work, study, and on-the-go tasks. Examples: Dell Latitude, HP ProBook, MacBook.', '2025-12-28 06:13:35'),
+(29, 'All-in-One PC', 'A computer with all components built into a single monitor unit to save space. Examples: iMac, HP All-in-One PC.', '2025-12-28 06:13:35'),
+(30, 'Tablet', 'A touchscreen mobile device used for browsing, presentations, and basic tasks. Examples: iPad, Samsung Galaxy Tab.', '2025-12-28 06:13:35'),
+(31, 'Smartphone / Mobile Device', 'A handheld device used for communication, apps, and mobile system access. Examples: Android phone, iPhone.', '2025-12-28 06:13:35'),
+(32, 'Monitor / Display', 'A screen used to display visual output from computers or other devices. Examples: LCD monitor, LED display, curved monitor.', '2025-12-28 06:13:35'),
+(33, 'Television / Large Display', 'A large screen used for presentations, meetings, or information display. Examples: Smart TV, LED TV, digital signage display.', '2025-12-28 06:13:35'),
+(34, 'Camera & Photography Equipment', 'Devices used for capturing photos and videos for documentation or media purposes. Examples: DSLR camera, mirrorless camera, tripod.', '2025-12-28 06:13:35'),
+(35, 'Audio & PA System', 'Equipment used for sound amplification during meetings, events, or announcements. Examples: microphone, speaker, amplifier, mixer.', '2025-12-28 06:13:35'),
+(36, 'Networking & Security Equipment', 'Devices used to manage network connections and ensure system security. Examples: router, switch, firewall, CCTV camera.', '2025-12-28 06:13:35'),
+(37, 'Server & Server Accessories', 'Hardware used to store, manage, and process data for multiple users or systems. Examples: rack server, NAS, server rack, UPS.', '2025-12-28 06:13:35'),
+(38, 'Power & Electrical Equipment', 'Devices that supply, control, or protect electrical power for equipment. Examples: UPS, extension cord, power adapter.', '2025-12-28 06:13:35'),
+(39, 'Accessories & Peripherals', 'Additional devices that support main equipment functions.', '2025-12-28 06:13:35');
 
 -- --------------------------------------------------------
 
@@ -123,8 +129,11 @@ CREATE TABLE `suppliers` (
 
 INSERT INTO `suppliers` (`id`, `supplier_name`, `address`, `phone`, `created_at`) VALUES
 (1, 'ABC Technologies Sdn. Bhd', '32, Jln Sentral 1, Taman Nusa Sentral, 79100 Iskandar Puteri, Johor Darul Ta\'zim', '011-12341234', '2025-12-24 08:22:56'),
-(2, 'def Technologies Sdn. Bhd', '', '', '2025-12-24 08:26:27'),
-(3, 'yut Technologies Sdn. Bhd', '', '', '2025-12-24 08:28:18');
+(9, 'Global Tech Solutions Sdn. Bhd', '12, Jalan Bukit Indah, 81200 Johor Bahru, Johor', '012-3456789', '2025-12-28 07:25:39'),
+(10, 'Prime Electronics Sdn. Bhd', '45, Jalan Tebrau, 80000 Johor Bahru, Johor', '013-9876543', '2025-12-28 07:25:39'),
+(11, 'Maju IT Services', '78, Jalan Skudai, 81300 Johor Bahru, Johor', '014-1122334', '2025-12-28 07:25:39'),
+(12, 'NextGen Computers', '22, Jalan Seri Alam, 81750 Masai, Johor', '011-5566778', '2025-12-28 07:25:39'),
+(13, 'Innovative Hardware Sdn. Bhd', '5, Jalan Kempas Baru, 81200 Johor Bahru, Johor', '019-3344556', '2025-12-28 07:25:39');
 
 -- --------------------------------------------------------
 
@@ -150,7 +159,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `staff_name`, `staff_id`, `email`, `position`, `user_id`, `password`, `activation_token`, `status`, `created_at`) VALUES
-(19, 'Syazleen', 'AI112233', 'nursyazleen28032003@gmail.com', 'Programmer', 'AI112233', '$2y$10$sta1pryyjHPulpwPQWQnHOmNEyrb2Y0tjqupjQkmqqiF9BrJMsfCe', NULL, 'active', '2025-12-24 03:28:41');
+(48, 'RUHANIM BINTI KAMIN', 'AI112233', 'ai220099@student.uthm.edu.my', 'IT', 'AI112233', '$2y$10$nudehtxXOli..bqU5X4/S.lgMSz0wk6rhkY5y3gVwN/64CfnBYfGC', NULL, 'active', '2025-12-28 04:27:21'),
+(53, 'NUR SYAZLEEN BINTI JALALUDDIN', 'AI112232', 'nursyazleen28032003@gmail.com', 'IT', 'AI112232', '$2y$10$591YW5WCCG/7lMEgplNzzOqYGxhuRL.KOKCVIeQKl68LKhf4HP7v6', NULL, 'active', '2025-12-28 06:02:14');
 
 --
 -- Indexes for dumped tables
@@ -168,7 +178,8 @@ ALTER TABLE `admins`
 --
 ALTER TABLE `assets`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `category_id` (`category_id`);
+  ADD UNIQUE KEY `asset_code` (`asset_code`),
+  ADD KEY `fk_assets_category` (`category_id`);
 
 --
 -- Indexes for table `asset_categories`
@@ -203,25 +214,25 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `assets`
 --
 ALTER TABLE `assets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `asset_categories`
 --
 ALTER TABLE `asset_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- Constraints for dumped tables
@@ -231,7 +242,7 @@ ALTER TABLE `users`
 -- Constraints for table `assets`
 --
 ALTER TABLE `assets`
-  ADD CONSTRAINT `assets_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `asset_categories` (`id`);
+  ADD CONSTRAINT `fk_assets_category` FOREIGN KEY (`category_id`) REFERENCES `asset_categories` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
