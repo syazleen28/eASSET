@@ -61,23 +61,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // === UPDATE DATA ===
     if (empty($errors)) {
         $stmt = $pdo->prepare("
-            UPDATE users SET
-                staff_name = :staff_name,
-                staff_id   = :staff_id,
-                email      = :email,
-                position   = :position
-            WHERE id = :id
-        ");
+    UPDATE users SET
+        staff_name = :staff_name,
+        staff_id   = :staff_id,
+        user_id    = :user_id,
+        email      = :email,
+        position   = :position
+    WHERE id = :id
+");
 
-        $stmt->execute([
-            ':staff_name' => $staff_name,
-            ':staff_id'   => $staff_id,
-            ':email'      => $email,
-            ':position'   => $position,
-            ':id'         => $id
-        ]);
+    $stmt->execute([
+        ':staff_name' => $staff_name,
+        ':staff_id'   => $staff_id,
+        ':user_id'    => $staff_id, // user_id = staff_id
+        ':email'      => $email,
+        ':position'   => $position,
+        ':id'         => $id
+    ]);
 
-        header("Location: view_user.php?id=" . $id . "&success=1");
+
+        header("Location: view_user.php?id=" . $id . "&success=1&type=edit");
         exit();
     }
 }
@@ -142,13 +145,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
-        <!-- USER ID (READONLY) -->
-        <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label">User ID :</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" value="<?= htmlspecialchars($user_id_db) ?>" readonly>
-            </div>
-        </div>
+       <!-- USER ID (READONLY) -->
+<div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">User ID :</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" id="user_id" value="<?= htmlspecialchars($user_id_db) ?>" readonly>
+    </div>
+</div>
+
 
         <!-- EMAIL -->
         <div class="mb-3 row">
@@ -189,18 +193,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- CONFIRM MODAL -->
 <div class="modal fade" id="confirmModal" tabindex="-1">
-<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-        <div class="modal-body text-center">
-            <i class="bi bi-exclamation-circle fs-1 text-warning"></i>
-            <p class="mt-3">Are you sure you want to save changes?</p>
+      <div class="modal-body text-center">
+        <i class="bi bi-exclamation-circle  text-warning" style="font-size: 4rem;"></i>
+        <p class="mt-3">Are you sure to save?</p>
 
-            <button type="button" class="btn btn-primary" id="confirmSave">Save</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-        </div>
+        <button type="button" class="btn btn-primary" id="confirmSave">
+            Save
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Back
+        </button>
+      </div>
     </div>
+  </div>
 </div>
-</div>
+
 
 <?php include 'includes/footer.php'; ?>
 
@@ -209,6 +218,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 document.getElementById('confirmSave').addEventListener('click', function () {
     document.getElementById('editUserForm').submit();
 });
+
+// Copy staff ID to user ID automatically
+const staffInput = document.querySelector('input[name="staff_id"]');
+const userInput = document.getElementById('user_id');
+
+staffInput.addEventListener('input', function() {
+    userInput.value = this.value;
+});
+
+
 </script>
 
 </body>

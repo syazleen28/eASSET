@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body text-center">
-        <i class="bi bi-exclamation-circle fs-1 text-warning"></i>
+        <i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>
         <p class="mt-3">Are you sure you want to save changes?</p>
 
         <button type="button" class="btn btn-primary" id="confirmSave">

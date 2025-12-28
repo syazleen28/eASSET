@@ -87,7 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link href="assets/images/style.css" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
@@ -156,8 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body text-center">
-        <i class="bi bi-exclamation-circle fs-1 text-warning"></i>
-        <p class="mt-3">Are you sure you want to save changes?</p>
+        <i class="bi bi-exclamation-circle  text-warning" style="font-size: 4rem;"></i>
+        <p class="mt-3">Are you sure to save?</p>
 
         <button type="button" class="btn btn-primary" id="confirmSave">
             Save

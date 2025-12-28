@@ -8,6 +8,13 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Validate ID
+if (!isset($_GET['id']) || empty($_GET['id'])) {
+    header("Location: index_asset.php");
+    exit();
+}
+
+$id = (int) $_GET['id'];
 $errors = [];
 $data = [];
 
@@ -24,18 +31,18 @@ $supStmt = $pdo->query("SELECT supplier_name FROM suppliers ORDER BY supplier_na
 $suppliers = $supStmt->fetchAll(PDO::FETCH_ASSOC);
 
 /* =========================
-   GENERATE ASSET CODE
+   FETCH ASSET DATA
 ========================= */
-$codeStmt = $pdo->query("SELECT asset_code FROM assets ORDER BY id DESC LIMIT 1");
-$lastCode = $codeStmt->fetchColumn();
+$stmt = $pdo->prepare("SELECT * FROM assets WHERE id = ?");
+$stmt->execute([$id]);
+$asset = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($lastCode) {
-    $num = (int) substr($lastCode, 4); // AST-0001 -> 1
-    $newNum = $num + 1;
-} else {
-    $newNum = 1;
+if (!$asset) {
+    header("Location: index_asset.php");
+    exit();
 }
-$assetCode = 'AST-' . str_pad($newNum, 4, '0', STR_PAD_LEFT);
+
+$data = $asset;
 
 /* =========================
    HANDLE FORM SUBMIT
@@ -62,58 +69,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($data['asset_name'] === '') {
         $errors['asset_name'] = "Asset Name / Model is required.";
     }
+
     if ($data['supplier'] === '') {
     $errors['supplier'] = "Supplier is required.";
 }
 
-
-    // Duplicate serial check ONLY if serial filled
+    // Duplicate serial check ONLY if serial filled and different from current
     if (!empty($data['serial_number'])) {
-        $check = $pdo->prepare("SELECT COUNT(*) FROM assets WHERE serial_number = ?");
-        $check->execute([$data['serial_number']]);
-
+        $check = $pdo->prepare("SELECT COUNT(*) FROM assets WHERE serial_number = ? AND id != ?");
+        $check->execute([$data['serial_number'], $id]);
         if ($check->fetchColumn() > 0) {
             $errors['serial_number'] = "Serial Number already exists.";
         }
     }
 
-    /* ===== INSERT ===== */
+    /* ===== UPDATE ===== */
     if (empty($errors)) {
         $stmt = $pdo->prepare("
-            INSERT INTO assets (
-                asset_code,
-                category_id, asset_status, asset_name, brand,
-                serial_number, supplier, purchase_date, purchase_cost,
-                manufacture_date, warranty, location,
-                assigned_user, description
-            ) VALUES (
-                :asset_code,
-                :category_id, :asset_status, :asset_name, :brand,
-                :serial_number, :supplier, :purchase_date, :purchase_cost,
-                :manufacture_date, :warranty, :location,
-                :assigned_user, :description
-            )
+            UPDATE assets SET
+                category_id = :category_id,
+                asset_status = :asset_status,
+                asset_name = :asset_name,
+                brand = :brand,
+                serial_number = :serial_number,
+                supplier = :supplier,
+                purchase_date = :purchase_date,
+                purchase_cost = :purchase_cost,
+                manufacture_date = :manufacture_date,
+                warranty = :warranty,
+                location = :location,
+                assigned_user = :assigned_user,
+                description = :description
+            WHERE id = :id
         ");
 
         $stmt->execute([
-            ':asset_code'        => $assetCode,
             ':category_id'       => $data['category_id'],
             ':asset_status'      => $data['asset_status'],
             ':asset_name'        => $data['asset_name'],
             ':brand'             => $data['brand'] ?: null,
             ':serial_number'     => $data['serial_number'] ?: null,
-            ':supplier'          => $data['supplier'] ,
+            ':supplier'          => $data['supplier'] ?: null,
             ':purchase_date'     => $data['purchase_date'] ?: null,
             ':purchase_cost'     => $data['purchase_cost'] ?: null,
             ':manufacture_date'  => $data['manufacture_date'] ?: null,
             ':warranty'          => $data['warranty'] ?: null,
             ':location'          => $data['location'] ?: null,
             ':assigned_user'     => $data['assigned_user'] ?: null,
-            ':description'       => $data['description'] ?: null
+            ':description'       => $data['description'] ?: null,
+            ':id'                => $id
         ]);
 
-        $id = $pdo->lastInsertId();
-        header("Location: view_asset.php?id=" . $id . "&success=1");
+        header("Location: view_asset.php?id=$id&success=1");
         exit();
     }
 }
@@ -122,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Add Asset | eAssets</title>
+<title>Edit Asset | eAssets</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -136,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php include 'includes/sidebar.php'; ?>
 
 <div class="main-content">
-<h5>ASSET MANAGEMENT &gt; Assets &gt; New Record</h5>
+<h5>ASSET MANAGEMENT &gt; Assets &gt; Edit Record</h5>
 
 <form method="post" id="assetForm" novalidate>
 
@@ -145,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="row mb-3">
     <label class="col-sm-2 col-form-label">Asset Code :</label>
     <div class="col-sm-4">
-        <input type="text" name="asset_code" class="form-control" value="<?= htmlspecialchars($assetCode) ?>" readonly>
+        <input type="text" name="asset_code" class="form-control" value="<?= htmlspecialchars($asset['asset_code']) ?>" readonly>
     </div>
 
     <label class="col-sm-2 col-form-label">Asset Category <span class="text-danger">*</span> :</label>
@@ -207,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="row mb-3">
     <label class="col-sm-2 col-form-label">Supplier <span class="text-danger">*</span> :</label>
 <div class="col-sm-4">
-    <select name="supplier" class="form-select <?= isset($errors['supplier']) ? 'is-invalid' : '' ?>">
+    <select name="supplier" class="form-select <?= isset($errors['supplier']) ? 'is-invalid' : '' ?>" required>
         <option value="">-- Select Supplier --</option>
         <?php foreach ($suppliers as $s): ?>
             <option value="<?= htmlspecialchars($s['supplier_name']) ?>"
@@ -216,7 +223,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </option>
         <?php endforeach; ?>
     </select>
-    <div class="invalid-feedback"><?= $errors['supplier'] ?? '' ?></div>
+    <div class="invalid-feedback">
+        <?= $errors['supplier'] ?? '' ?>
+    </div>
 </div>
 
 
@@ -275,7 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <div class="text-end">
-    <a href="index_asset.php" class="btn btn-secondary">Back</a>
+    <a href="view_asset.php?id=<?= $id ?>" class="btn btn-secondary">Back</a>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">
         Save
     </button>
@@ -290,7 +299,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="modal-content">
       <div class="modal-body text-center p-4">
         <i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>
-        <p class="mt-3">Are you sure you want to save this asset?</p>
+        <p class="mt-3">Are you sure to save>?</p>
 
         <button type="button" class="btn btn-primary" id="confirmSave">Save</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>

@@ -32,6 +32,8 @@ header("Location: config_supplier.php");
 exit();
 ?>
 
+<?php
+/*
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,3 +75,6 @@ exit();
 
 </body>
 </html>
+*/
+?>
+

@@ -67,11 +67,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link href="assets/images/style.css" rel="stylesheet">
-<style>
+<!-- <style>
   /* Resize the confirmation modal */
   #confirmModal .modal-dialog {
       max-width: 350px;
-  }
+  } -->
 </style>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -87,7 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <form method="post" id="supplierForm" novalidate>
-
+<div class="card">
+    <div class="card-body">
         <!-- SUPPLIER NAME -->
         <div class="mb-3 row">
             <label class="col-sm-2 col-form-label">
@@ -106,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
         </div>
+
 
         <!-- ADDRESS -->
         <div class="mb-3 row">
@@ -135,17 +137,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- CONFIRM MODAL -->
 <div class="modal fade" id="confirmModal" tabindex="-1">
-<div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-    <div class="modal-body text-center">
+      <div class="modal-body text-center p-4">
         <i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>
         <p class="mt-3">Are you sure you want to save?</p>
-        <button type="button" class="btn btn-primary" id="confirmSave">Save</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+
+        <button type="button" class="btn btn-primary" id="confirmSave">
+          Save
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Back
+        </button>
+      </div>
     </div>
-    </div>
+  </div>
 </div>
-</div>
+                </div>
+                </div>
 
 <?php include 'includes/footer.php'; ?>
 

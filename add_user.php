@@ -14,7 +14,6 @@ use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php';
 
 $errors = [];
-$success = '';
 $staff_name = '';
 $staff_id   = '';
 $user_id    = '';
@@ -34,32 +33,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user_id === '')    $errors['user_id']    = "User ID is required.";
     if ($email === '')      $errors['email']      = "Email is required.";
 
-    // Duplicate check
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE user_id = :user_id OR email = :email");
-    $stmt->execute([':user_id' => $user_id, ':email' => $email]);
-    if ($stmt->fetchColumn() > 0) $errors['user_id'] = "User ID or Email already exists.";
+    // Duplicate check for staff_id and email
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE staff_id = :staff_id OR email = :email");
+    $stmt->execute([
+        ':staff_id' => $staff_id,
+        ':email'    => $email
+    ]);
+    $existing = $stmt->fetchColumn();
+
+    if ($existing > 0) {
+        $stmt2 = $pdo->prepare("SELECT staff_id, email FROM users WHERE staff_id = :staff_id OR email = :email");
+        $stmt2->execute([':staff_id' => $staff_id, ':email' => $email]);
+        $row = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+        if ($row['staff_id'] == $staff_id) $errors['staff_id'] = "Staff ID already exists.";
+        if ($row['email'] == $email)      $errors['email']    = "Email already exists.";
+    }
 
     if (empty($errors)) {
         // Generate activation token
         $activation_token = bin2hex(random_bytes(16));
-
-        // Insert user with status 'pending'
-        $stmt = $pdo->prepare("
-            INSERT INTO users (staff_name, staff_id, email, position, user_id, status, activation_token) 
-            VALUES (:staff_name, :staff_id, :email, :position, :user_id, 'pending', :token)
-        ");
-        $stmt->execute([
-            ':staff_name' => $staff_name,
-            ':staff_id'   => $staff_id,
-            ':email'      => $email,
-            ':position'   => $position,
-            ':user_id'    => $user_id,
-            ':token'      => $activation_token
-        ]);
-
-        // Send activation email
         $activation_link = "http://localhost/eASSET/activate.php?token=$activation_token";
 
+        // Try sending email first
         $mail = new PHPMailer(true);
         try {
             $mail->isSMTP();
@@ -79,10 +75,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               Please click the link to activate your account:<br>
                               <a href='$activation_link'>$activation_link</a><br><br>Thank you!";
 
-            $mail->send();
-            $success = "User registered successfully! Activation email sent to $email.";
+            $mail->send(); // Email sent successfully
+
+            // Insert user into DB only if email sent
+            $stmt = $pdo->prepare("
+                INSERT INTO users (staff_name, staff_id, email, position, user_id, status, activation_token) 
+                VALUES (:staff_name, :staff_id, :email, :position, :user_id, 'pending', :token)
+            ");
+            $stmt->execute([
+                ':staff_name' => $staff_name,
+                ':staff_id'   => $staff_id,
+                ':email'      => $email,
+                ':position'   => $position,
+                ':user_id'    => $user_id,
+                ':token'      => $activation_token
+            ]);
+
+            // Redirect to view page with success
+            $lastId = $pdo->lastInsertId();
+            header("Location: view_user.php?id=$lastId&success=1&type=add");
+            exit();
+
         } catch (Exception $e) {
-            $errors['mail'] = "Mailer Error: " . $mail->ErrorInfo;
+            // If email fails, show error and do not save
+            $errors['mail'] = "Activation email could not be sent. Mailer Error: " . $mail->ErrorInfo;
         }
     }
 }
@@ -99,9 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link href="assets/images/style.css" rel="stylesheet">
 
-<style>
-#confirmModal .modal-dialog { max-width: 350px; }
-</style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -120,10 +133,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php foreach($errors as $e) echo htmlspecialchars($e)."<br>"; ?>
         </div>
     <?php endif; ?>
-    <?php if($success): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-    <?php endif; ?>
-
+<div class="card">
+    <div class="card-body">
     <form method="POST" id="userForm" novalidate>
 
         <!-- STAFF NAME -->
@@ -199,20 +210,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </form>
 </div>
-
-<!-- CONFIRM MODAL -->
-<div class="modal fade" id="confirmModal" tabindex="-1">
-<div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-        <div class="modal-body text-center">
-            <i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>
-            <p class="mt-3">Are you sure you want to save?</p>
-            <button type="button" class="btn btn-primary" id="confirmSave">Save</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+</div>
+</div>
+        <!-- CONFIRM MODAL -->
+        <div class="modal fade" id="confirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>
+                    <p class="mt-3">Are you sure to save?</p>
+                    <button type="button" class="btn btn-primary" id="confirmSave">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-</div>
+        </div>
 
 <?php include 'includes/footer.php'; ?>
 
@@ -225,6 +237,11 @@ const staffInput = document.getElementById('staff_id');
 const userInput  = document.getElementById('user_id');
 staffInput.addEventListener('input', function() {
     userInput.value = staffInput.value;
+});
+
+document.getElementById('userForm').addEventListener('input', () => {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => alert.remove());
 });
 </script>
 

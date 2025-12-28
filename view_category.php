@@ -74,7 +74,7 @@ $showSuccess = (isset($_GET['success']) && $_GET['success'] == 1);
 
             <!-- CATEGORY NAME -->
             <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label fw-bold">
+                <label class="col-sm-2 col-form-label ">
                     Category Name :
                 </label>
                 <div class="col-sm-10">
@@ -87,7 +87,7 @@ $showSuccess = (isset($_GET['success']) && $_GET['success'] == 1);
 
             <!-- DESCRIPTION -->
             <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label fw-bold">
+                <label class="col-sm-2 col-form-label ">
                     Description :
                 </label>
                 <div class="col-sm-10">
@@ -112,8 +112,8 @@ $showSuccess = (isset($_GET['success']) && $_GET['success'] == 1);
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                 <div class="modal-body text-center">
-                    <i class="bi bi-exclamation-triangle fs-1 text-danger"></i>
-                    <p class="mt-3">Are you sure to delete this category?</p>
+                    <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                    <p class="mt-3">Are you sure to delete?</p>
 
                     <form method="post" action="delete_category.php">
                         <input type="hidden" name="delete_id" id="deleteId">

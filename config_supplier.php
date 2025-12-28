@@ -8,18 +8,29 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Handle delete POST request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
-    $deleteId = (int)$_POST['delete_id'];
-    $stmt = $pdo->prepare("DELETE FROM suppliers WHERE id = :id");
-    $stmt->execute([':id' => $deleteId]);
-    header("Location: config_supplier.php?delete=1");
-    exit();
-}
+// ===== Pagination settings =====
+$limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+$page  = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-// Fetch all suppliers
+if ($page < 1) $page = 1;
+if (!in_array($limit, [10, 25, 50])) $limit = 10;
+
+$offset = ($page - 1) * $limit;
+
+// ===== Count total suppliers =====
+$countStmt = $pdo->query("SELECT COUNT(*) FROM suppliers");
+$totalRecords = $countStmt->fetchColumn();
+$totalPages = ceil($totalRecords / $limit);
+
+// ===== Fetch suppliers with LIMIT & OFFSET =====
 try {
-    $stmt = $pdo->prepare("SELECT * FROM suppliers ORDER BY id DESC");
+    $stmt = $pdo->prepare("
+        SELECT * FROM suppliers
+        ORDER BY id DESC
+        LIMIT :limit OFFSET :offset
+    ");
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
@@ -51,28 +62,28 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
 <div class="main-content">
 
 <?php if (isset($_GET['delete']) && $_GET['delete'] == 1): ?>
-    <div class="alert alert-success d-flex align-items-center mb-3" id="deleteAlert">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        <div>
-            <strong>Deleted</strong><br>
-            Supplier deleted successfully!
-        </div>
+<div class="alert alert-success d-flex align-items-center mb-3" id="deleteAlert">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <div>
+        <strong>Deleted</strong><br>
+        Supplier deleted successfully!
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const alert = document.getElementById('deleteAlert');
-            if (alert) {
-                setTimeout(() => {
-                    alert.style.transition = "opacity 0.5s";
-                    alert.style.opacity = "0";
-                    setTimeout(() => {
-                        alert.remove();
-                        window.history.replaceState({}, document.title, "config_supplier.php");
-                    }, 500);
-                }, 3000);
-            }
-        });
-    </script>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const alert = document.getElementById('deleteAlert');
+    if (alert) {
+        setTimeout(() => {
+            alert.style.transition = "opacity 0.5s";
+            alert.style.opacity = "0";
+            setTimeout(() => {
+                alert.remove();
+                window.history.replaceState({}, document.title, "config_supplier.php");
+            }, 500);
+        }, 3000);
+    }
+});
+</script>
 <?php endif; ?>
 
 <h5>CONFIGURATION &gt; Suppliers</h5>
@@ -83,13 +94,34 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
     </div>
 
     <div class="card-body">
-        <table class="table table-bordered table-striped">
+        <div class="d-flex justify-content-between mb-3">
+            <!-- Records per page -->
+            <form method="get">
+                Show
+                <select name="limit"
+                        class="form-select d-inline-block w-auto"
+                        onchange="this.form.submit()">
+                    <option value="10" <?= $limit == 10 ? 'selected' : '' ?>>10</option>
+                    <option value="25" <?= $limit == 25 ? 'selected' : '' ?>>25</option>
+                    <option value="50" <?= $limit == 50 ? 'selected' : '' ?>>50</option>
+                </select>
+                records per page
+            </form>
+
+            <!-- Live search -->
+            <div>
+                Search:
+                <input type="text" id="searchInput" class="form-control form-control-sm d-inline-block w-auto">
+            </div>
+        </div>
+
+        <table id="supplierTable" class="table table-bordered table-striped">
             <thead class="table-light">
                 <tr>
                     <th>No.</th>
                     <th>Supplier Name</th>
                     <th>Address</th>
-                    <th>Phone</th>
+                    
                     <th class="text-center">Action</th>
                 </tr>
             </thead>
@@ -97,10 +129,10 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
                 <?php if ($suppliers): ?>
                     <?php foreach ($suppliers as $index => $sup): ?>
                     <tr>
-                        <td><?= $index + 1 ?></td>
+                        <td><?= $offset + $index + 1 ?></td>
                         <td><?= htmlspecialchars($sup['supplier_name']) ?></td>
                         <td><?= htmlspecialchars($sup['address'] ?: 'No Address') ?></td>
-                        <td><?= htmlspecialchars($sup['phone'] ?: '-') ?></td>
+                        
                         <td class="text-center">
                             <div class="action-group mx-auto">
                                 <a href="view_supplier.php?id=<?= $sup['id'] ?>" class="action-btn view" title="View">
@@ -129,19 +161,38 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
                 <?php endif; ?>
             </tbody>
         </table>
+
+        <!-- Pagination -->
+        <div>
+            Page <?= $page ?> of <?= $totalPages ?>
+            <nav class="d-inline-block float-end">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item <?= $page <= 1 ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=<?= $page - 1 ?>&limit=<?= $limit ?>">&lt;</a>
+                    </li>
+                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item <?= $i == $page ? 'active' : '' ?>">
+                        <a class="page-link" href="?page=<?= $i ?>&limit=<?= $limit ?>"><?= $i ?></a>
+                    </li>
+                    <?php endfor; ?>
+                    <li class="page-item <?= $page >= $totalPages ? 'disabled' : '' ?>">
+                        <a class="page-link" href="?page=<?= $page + 1 ?>&limit=<?= $limit ?>">&gt;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
-
+</div>
 
 <!-- DELETE CONFIRM MODAL -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body text-center">
-        <i class="bi bi-exclamation-triangle fs-1 text-danger"></i>
+        <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
         <p class="mt-3">Are you sure to delete?</p>
-
-        <form method="post" id="deleteForm">
+        <form method="post" action="delete_supplier.php">
             <input type="hidden" name="delete_id" id="deleteId">
             <button type="submit" class="btn btn-danger">Delete</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -150,14 +201,37 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
     </div>
   </div>
 </div>
-</div>
+
 <?php include 'includes/footer.php'; ?>
+
 <script>
+// Set delete modal ID
 const deleteBtns = document.querySelectorAll('.deleteBtn');
 deleteBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-id');
-        document.getElementById('deleteId').value = id;
+        document.getElementById('deleteId').value = btn.getAttribute('data-id');
+    });
+});
+
+// Live search
+const searchInput = document.getElementById('searchInput');
+const table = document.getElementById('supplierTable');
+const tbody = table.getElementsByTagName('tbody')[0];
+const rows = tbody.getElementsByTagName('tr');
+
+searchInput.addEventListener('keyup', function () {
+    const filter = searchInput.value.toLowerCase();
+
+    Array.from(rows).forEach(row => {
+        const supplierName = row.cells[1].textContent.toLowerCase();
+        const address      = row.cells[2].textContent.toLowerCase();
+        
+
+        if (supplierName.includes(filter) || address.includes(filter)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
     });
 });
 </script>

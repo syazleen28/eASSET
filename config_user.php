@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'config/database.php'; // PDO connection
+require_once 'config/database.php'; 
 
 // Redirect to login if not logged in
 if (!isset($_SESSION['user_id'])) {
@@ -8,23 +8,41 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Handle delete POST request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
-    $deleteId = (int)$_POST['delete_id'];
-    $stmt = $pdo->prepare("DELETE FROM users WHERE id = :id");
-    $stmt->execute([':id' => $deleteId]);
-    header("Location: config_user.php?delete=1");
-    exit();
-}
+// // Handle delete POST request
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+//     $deleteId = (int)$_POST['delete_id'];
+//     $stmt = $pdo->prepare("DELETE FROM users WHERE id = :id");
+//     $stmt->execute([':id' => $deleteId]);
+//     header("Location: config_user.php?delete=1");
+//     exit();
+// }
 
 // Fetch all users
-try {
-    $stmt = $pdo->prepare("SELECT * FROM users ORDER BY id DESC");
-    $stmt->execute();
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    die("Error fetching users: " . $e->getMessage());
-}
+// ===== Pagination settings =====
+$limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+$page  = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+if ($page < 1) $page = 1;
+if (!in_array($limit, [10, 25, 50])) $limit = 10;
+
+$offset = ($page - 1) * $limit;
+
+// ===== Count total users =====
+$countStmt = $pdo->query("SELECT COUNT(*) FROM users");
+$totalRecords = $countStmt->fetchColumn();
+$totalPages = ceil($totalRecords / $limit);
+
+// ===== Fetch users with LIMIT & OFFSET =====
+$stmt = $pdo->prepare("
+    SELECT * FROM users
+    ORDER BY id DESC
+    LIMIT :limit OFFSET :offset
+");
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -78,27 +96,30 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
 <h5>CONFIGURATION &gt; System User</h5>
 <div class="card mt-3">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <span>System Users</span>
+        <span>System User</span>
         <a href="add_user.php" class="btn btn-primary btn-sm">New Record</a>
     </div>
 
     <div class="card-body">
         <div class="d-flex justify-content-between mb-3">
+            <form method="get">
+    Show
+    <select name="limit"
+            class="form-select d-inline-block w-auto"
+            onchange="this.form.submit()">
+        <option value="10" <?= $limit == 10 ? 'selected' : '' ?>>10</option>
+        <option value="25" <?= $limit == 25 ? 'selected' : '' ?>>25</option>
+        <option value="50" <?= $limit == 50 ? 'selected' : '' ?>>50</option>
+    </select>
+    records per page
+</form>
+
             <div>
-                Show 
-                <select class="form-select d-inline-block w-auto">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
-                records per page
-            </div>
-            <div>
-                Search: <input type="text" class="form-control form-control-sm d-inline-block w-auto">
+                Search: <input type="text" id="searchInput" class="form-control form-control-sm d-inline-block w-auto">
             </div>
         </div>
 
-        <table class="table table-bordered table-striped">
+        <table id="usersTable" class="table table-bordered table-striped">
             <thead class="table-light">
                 <tr>
                     <th>No.</th>
@@ -111,7 +132,8 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
                 <?php if ($users): ?>
                     <?php foreach ($users as $index => $user): ?>
                     <tr>
-                        <td><?= $index + 1 ?></td>
+                        <td><?= $offset + $index + 1 ?></td>
+
                         <td><?= htmlspecialchars($user['staff_id']) ?></td>
                         <td><?= htmlspecialchars($user['staff_name']) ?></td>
                         <td class="text-center">
@@ -125,14 +147,14 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
                                 </a>
 
                                 <button type="button"
-                                        class="action-btn delete deleteBtn"
-                                        data-id="<?= $user['id'] ?>"
-                                        data-name="<?= htmlspecialchars($user['staff_name']) ?>"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal"
-                                        title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+                                    class="action-btn delete deleteBtn"
+                                    data-id="<?= $user['id'] ?>"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal"
+                                    title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+
                             </div>
                         </td>
                     </tr>
@@ -165,10 +187,9 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-body text-center">
-        <i class="bi bi-exclamation-triangle fs-1 text-danger"></i>
-        <p class="mt-3" id="deleteMessage">Are you sure to delete?</p>
-
-        <form method="post" id="deleteForm">
+        <i class="bi bi-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+       <p class="mt-3">Are you sure to delete?</p>
+        <form method="post"  action="delete_user.php">
             <input type="hidden" name="delete_id" id="deleteId">
             <button type="submit" class="btn btn-danger">Delete</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -181,18 +202,38 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
 <?php include 'includes/footer.php'; ?>
 
 <script>
-// Pass user id and name to modal
 const deleteBtns = document.querySelectorAll('.deleteBtn');
 deleteBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-id');
-        const name = btn.getAttribute('data-name');
-        document.getElementById('deleteId').value = id;
-        document.getElementById('deleteMessage').innerText = `Are you sure to delete `;
+        document.getElementById('deleteId').value = btn.getAttribute('data-id');
     });
 });
 </script>
 
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Live search
+const searchInput = document.getElementById('searchInput');
+const table = document.getElementById('usersTable');
+const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+searchInput.addEventListener('keyup', function() {
+    const filter = searchInput.value.toLowerCase();
+
+    Array.from(rows).forEach(row => {
+        const staffId = row.cells[1].textContent.toLowerCase();
+        const staffName = row.cells[2].textContent.toLowerCase();
+
+        if (staffId.includes(filter) || staffName.includes(filter)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+});
+</script>
+
 </body>
 </html>
