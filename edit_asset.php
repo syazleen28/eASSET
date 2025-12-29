@@ -144,7 +144,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="main-content">
 <h5>ASSET MANAGEMENT &gt; Assets &gt; Edit Record</h5>
-
+<div class="card">
+    <div class="card-body">
 <form method="post" id="assetForm" novalidate>
 
 <h6 class="mb-3 mt-3 fw-bold">Asset Information</h6>
@@ -291,6 +292,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 </form>
+        </div>
+        </div>
 </div>
 
 <!-- CONFIRM MODAL -->

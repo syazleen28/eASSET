@@ -99,7 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="mb-4">
         <h5>CONFIGURATION &gt; Supplier &gt; Update</h5>
     </div>
-
+<div class="card">
+    <div class="card-body">
     <form method="post" id="editSupplierForm" novalidate>
 
         <!-- SUPPLIER NAME -->
@@ -148,6 +149,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </form>
+    <div>
+                </div>
 </div>
 
 <!-- CONFIRM MODAL -->

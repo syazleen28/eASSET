@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 29, 2025 at 09:58 AM
+-- Generation Time: Dec 29, 2025 at 12:34 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -74,8 +74,7 @@ CREATE TABLE `assets` (
 --
 
 INSERT INTO `assets` (`id`, `asset_code`, `category_id`, `asset_status`, `asset_name`, `brand`, `serial_number`, `supplier`, `purchase_date`, `purchase_cost`, `manufacture_date`, `warranty`, `location`, `assigned_user`, `description`, `created_at`) VALUES
-(6, 'AST-0001', 28, 'Maintenance', 'Dell Latitude 5420', 'Dell', 'DL5420SN001', 'ABC Technologies Sdn. Bhd', '2024-03-15', 4200.00, '2024-02-01', '3 Years', 'Staff Area Bawah', 'Ahmad Fauzi', 'Programming', '2025-12-29 07:09:48'),
-(7, 'AST-0002', 28, 'In Use', 'HP ProDesk 400 G7', 'HP', 'HP400G7SN002', 'Global Tech Solutions Sdn. Bhd', '2024-01-20', 3500.00, '2023-12-10', '2 Years', 'Staff Area Bawah', 'Nur Aisyah', '1.09TB/32.0GB/ Intel® Core™ i5-9400 CPU@2.90 GHZ', '2025-12-29 07:13:04');
+(2, 'AST-0001', 29, 'Available', 'Dell Inspiron 15', 'Dell', 'SN123456', 'ABC Technologies Sdn. Bhd', '2025-12-10', 5000.00, '2025-12-31', '2 Years', 'it department', 'NAZ', NULL, '2025-12-28 10:16:53');
 
 -- --------------------------------------------------------
 
@@ -215,7 +214,7 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `assets`
 --
 ALTER TABLE `assets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `asset_categories`

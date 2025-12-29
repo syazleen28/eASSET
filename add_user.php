@@ -133,6 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php foreach($errors as $e) echo htmlspecialchars($e)."<br>"; ?>
         </div>
     <?php endif; ?>
+    
 <div class="card">
     <div class="card-body">
     <form method="POST" id="userForm" novalidate>
