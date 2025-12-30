@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 30, 2025 at 10:00 AM
+-- Generation Time: Dec 29, 2025 at 09:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -75,7 +75,7 @@ CREATE TABLE `assets` (
 
 INSERT INTO `assets` (`id`, `asset_code`, `category_id`, `asset_status`, `asset_name`, `brand`, `serial_number`, `supplier`, `purchase_date`, `purchase_cost`, `manufacture_date`, `warranty`, `location`, `assigned_user`, `description`, `created_at`) VALUES
 (6, 'AST-0001', 28, 'Maintenance', 'Dell Latitude 5420', 'Dell', 'DL5420SN001', 'ABC Technologies Sdn. Bhd', '2024-03-15', 4200.00, '2024-02-01', '3 Years', 'Staff Area Bawah', 'Ahmad Fauzi', 'Programming', '2025-12-29 07:09:48'),
-(7, 'AST-0002', 28, 'Available', 'HP ProDesk 400 G7', 'HP', 'HP400G7SN002', 'Global Tech Solutions Sdn. Bhd', '2024-01-20', 3500.00, '2023-12-10', '2 Years', 'Staff Area Bawah', 'Nur Aisyah', '1.09TB/32.0GB/ Intel® Core™ i5-9400 CPU@2.90 GHZ', '2025-12-29 07:13:04');
+(7, 'AST-0002', 28, 'In Use', 'HP ProDesk 400 G7', 'HP', 'HP400G7SN002', 'Global Tech Solutions Sdn. Bhd', '2024-01-20', 3500.00, '2023-12-10', '2 Years', 'Staff Area Bawah', 'Nur Aisyah', '1.09TB/32.0GB/ Intel® Core™ i5-9400 CPU@2.90 GHZ', '2025-12-29 07:13:04');
 
 -- --------------------------------------------------------
 
@@ -109,24 +109,6 @@ INSERT INTO `asset_categories` (`id`, `category_name`, `description`, `created_a
 (37, 'Server & Server Accessories', 'Hardware used to store, manage, and process data for multiple users or systems. Examples: rack server, NAS, server rack, UPS.', '2025-12-28 06:13:35'),
 (38, 'Power & Electrical Equipment', 'Devices that supply, control, or protect electrical power for equipment. Examples: UPS, extension cord, power adapter.', '2025-12-28 06:13:35'),
 (39, 'Accessories & Peripherals', 'Additional devices that support main equipment functions.', '2025-12-28 06:13:35');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `asset_maintenance`
---
-
-CREATE TABLE `asset_maintenance` (
-  `id` int(11) NOT NULL,
-  `asset_id` int(11) NOT NULL,
-  `issue_title` varchar(255) NOT NULL,
-  `issue_description` text DEFAULT NULL,
-  `issue_date` date NOT NULL,
-  `action_taken` text DEFAULT NULL,
-  `maintenance_status` enum('Pending','In Progress','Completed') DEFAULT 'Pending',
-  `completion_date` date DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -207,13 +189,6 @@ ALTER TABLE `asset_categories`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `asset_maintenance`
---
-ALTER TABLE `asset_maintenance`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_asset_maintenance` (`asset_id`);
-
---
 -- Indexes for table `suppliers`
 --
 ALTER TABLE `suppliers`
@@ -249,12 +224,6 @@ ALTER TABLE `asset_categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
--- AUTO_INCREMENT for table `asset_maintenance`
---
-ALTER TABLE `asset_maintenance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
@@ -275,12 +244,6 @@ ALTER TABLE `users`
 --
 ALTER TABLE `assets`
   ADD CONSTRAINT `fk_assets_category` FOREIGN KEY (`category_id`) REFERENCES `asset_categories` (`id`) ON UPDATE CASCADE;
-
---
--- Constraints for table `asset_maintenance`
---
-ALTER TABLE `asset_maintenance`
-  ADD CONSTRAINT `fk_asset_maintenance` FOREIGN KEY (`asset_id`) REFERENCES `assets` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
