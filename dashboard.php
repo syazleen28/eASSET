@@ -61,24 +61,7 @@ $recentAllocations = [
         <canvas id="assetsChart"></canvas>
     </div>
 
-    <div class="table-container">
-        <h5>Recent Asset Allocations</h5>
-        <table class="table table-bordered">
-            <thead>
-                <tr><th>Asset</th><th>Allocated To</th><th>Date</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-                <?php foreach ($recentAllocations as $row): ?>
-                <tr>
-                    <td><?= $row[0] ?></td>
-                    <td><?= $row[1] ?></td>
-                    <td><?= $row[2] ?></td>
-                    <td><?= $row[3] ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+    
 </div>
 
 <script>

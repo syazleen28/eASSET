@@ -33,7 +33,7 @@ if (!isset($_SESSION['user_id'])) {
 
 <div class="main-content">
 
-<h5>ASSET MANAGEMENT &gt; Reports</h5>
+<h5>REPORT > </h5>
 
 <!-- ================= FILTER SECTION ================= -->
 <div class="card mt-3 mb-3">
@@ -48,7 +48,7 @@ if (!isset($_SESSION['user_id'])) {
                 <div class="col-md-3">
                     <label class="form-label">Report Type</label>
                     <select class="form-select">
-                        <option value="">-- Select Report --</option>
+                        <option value="">-- Select Report Type --</option>
                         <option>Asset Report</option>
                         <option>Maintenance Report</option>
                         <option>Assignment Report</option>
@@ -66,16 +66,16 @@ if (!isset($_SESSION['user_id'])) {
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label">Category</label>
+                    <label class="form-label">Asset Category</label>
                     <select class="form-select">
-                        <option>All Categories</option>
+                        <option>--Select Asset Category--</option>
                     </select>
                 </div>
 
                 <div class="col-md-3">
                     <label class="form-label">Asset Status</label>
                     <select class="form-select">
-                        <option>All</option>
+                        <option>--Select Asset Status--</option>
                         <option>Available</option>
                         <option>Maintenance</option>
                         <option>Disposed</option>
@@ -84,7 +84,7 @@ if (!isset($_SESSION['user_id'])) {
 
                 <div class="col-md-12 text-end">
                     <button type="button" class="btn btn-primary mt-3">
-                        <i class="bi bi-search"></i> Generate Report
+                        Search
                     </button>
                 </div>
 
@@ -106,9 +106,7 @@ if (!isset($_SESSION['user_id'])) {
             <button class="btn btn-primary btn-sm">
                 <i class="bi bi-file-earmark-word"></i> Word
             </button>
-            <button class="btn btn-secondary btn-sm" onclick="window.print()">
-                <i class="bi bi-printer"></i> Print
-            </button>
+           
         </div>
     </div>
 
@@ -123,7 +121,7 @@ if (!isset($_SESSION['user_id'])) {
                         <th>Asset Name</th>
                         <th>Category</th>
                         <th>Status</th>
-                        <th>Date</th>
+                     
                     </tr>
                 </thead>
 
@@ -137,7 +135,7 @@ if (!isset($_SESSION['user_id'])) {
                         <td>
                             <span class="badge bg-warning text-dark">Maintenance</span>
                         </td>
-                        <td>15/01/2025</td>
+                      
                     </tr>
 
                     <tr>
@@ -148,7 +146,7 @@ if (!isset($_SESSION['user_id'])) {
                         <td>
                             <span class="badge bg-success">Available</span>
                         </td>
-                        <td>20/01/2025</td>
+                      
                     </tr>
 
                     <!-- Empty state -->

@@ -74,7 +74,7 @@ try {
 
 <div class="main-content">
 
-<h5>ASSET MANAGEMENT &gt; Maintenance</h5>
+<h5>MAINTENANCE > </h5>
 
 <div class="card mt-3">
     <div class="card-header">

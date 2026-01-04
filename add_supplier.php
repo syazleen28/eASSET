@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="main-content">
 
     <div class="mb-4">
-        <h5>CONFIGURATION &gt; Suppliers &gt; New Record</h5>
+        <h5>CONFIGURATION &gt; SUPPLIER &gt; New Record</h5>
     </div>
 
     <form method="post" id="supplierForm" novalidate>

@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="main-content">
     <div class="mb-4">
-        <h5>CONFIGURATION &gt; System User &gt; New Record</h5>
+        <h5>CONFIGURATION &gt; SYSTEM USER &gt; New Record</h5>
     </div>
 
     <?php if(!empty($errors)): ?>

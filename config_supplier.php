@@ -86,10 +86,10 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php endif; ?>
 
-<h5>CONFIGURATION &gt; Suppliers</h5>
+<h5>CONFIGURATION &gt; Supplier</h5>
 <div class="card mt-3">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <span>Suppliers</span>
+        <span>Supplier</span>
         <a href="add_supplier.php" class="btn btn-primary btn-sm">New Record</a>
     </div>
 

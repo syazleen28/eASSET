@@ -100,7 +100,7 @@ body { font-family: 'Poppins', sans-serif; background-color: #f5f5f5; }
     <h5>CONFIGURATION &gt; Asset Category</h5>
     <div class="card mt-3">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Asset Categories</span>
+            <span>Asset Category</span>
             <a href="add_category.php" class="btn btn-primary btn-sm">New Record</a>
         </div>
 

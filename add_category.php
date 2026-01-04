@@ -80,9 +80,10 @@ exit();
 <div class="main-content">
 
     <div class="mb-4">
-        <h5>CONFIGURATION &gt; Asset Category &gt; New Record</h5>
+        <h5>CONFIGURATION &gt; ASSET CATEGORY &gt; New Record</h5>
     </div>
-
+<div class="card">
+    <div class="card-body">
     <form method="post" id="categoryForm" novalidate>
 
         <!-- CATEGORY NAME -->
@@ -131,7 +132,8 @@ exit();
         </div>
     </form>
 </div>
-
+                </div>
+                </div>
 <!-- CONFIRM MODAL -->
     <div class="modal fade" id="confirmModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">

@@ -136,8 +136,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php include 'includes/sidebar.php'; ?>
 
 <div class="main-content">
-<h5>ASSET MANAGEMENT &gt; Assets &gt; New Record</h5>
-
+<h5>ASSETS &gt; New Record</h5>
+<div class="card">
+    <div class="card-body">
 <form method="post" id="assetForm" novalidate>
 
 <h6 class="mb-3 mt-3 fw-bold">Asset Information</h6>
@@ -285,7 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </form>
 </div>
-
+        </div>
 <!-- CONFIRM MODAL -->
 <div class="modal fade" id="confirmModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
@@ -300,7 +301,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
 </div>
-
+        </div>
 <?php include 'includes/footer.php'; ?>
 
 <script>

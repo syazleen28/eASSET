@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php endif; ?>
 
-<h5>ASSET MANAGEMENT &gt; Assets</h5>
+<h5>ASSETS ></h5>
 
 <div class="card mt-3">
     <div class="card-header d-flex justify-content-between align-items-center">
