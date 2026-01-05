@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2026 at 10:14 AM
+-- Generation Time: Dec 30, 2025 at 10:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -74,8 +74,8 @@ CREATE TABLE `assets` (
 --
 
 INSERT INTO `assets` (`id`, `asset_code`, `category_id`, `asset_status`, `asset_name`, `brand`, `serial_number`, `supplier`, `purchase_date`, `purchase_cost`, `manufacture_date`, `warranty`, `location`, `assigned_user`, `description`, `created_at`) VALUES
-(6, 'AST-0001', 28, 'In Use', 'Dell Latitude 5420', 'Dell', 'DL5420SN001', 'ABC Technologies Sdn. Bhd', '2024-03-15', 4200.00, '2024-02-01', '3 Years', 'Staff Area Bawah', 'Ahmad Fauzi', 'Programming', '2025-12-29 07:09:48'),
-(7, 'AST-0002', 28, 'Maintenance', 'HP ProDesk 400 G7', 'HPa', 'HP400G7SN002', 'Global Tech Solutions Sdn. Bhd', '2024-01-20', 3500.00, '2023-12-10', '2 Years', 'Staff Area Bawah', 'Nur Aisyah', '1.09TB/32.0GB/ Intel® Core™ i5-9400 CPU@2.90 GHZ', '2025-12-29 07:13:04');
+(6, 'AST-0001', 28, 'Maintenance', 'Dell Latitude 5420', 'Dell', 'DL5420SN001', 'ABC Technologies Sdn. Bhd', '2024-03-15', 4200.00, '2024-02-01', '3 Years', 'Staff Area Bawah', 'Ahmad Fauzi', 'Programming', '2025-12-29 07:09:48'),
+(7, 'AST-0002', 28, 'Available', 'HP ProDesk 400 G7', 'HP', 'HP400G7SN002', 'Global Tech Solutions Sdn. Bhd', '2024-01-20', 3500.00, '2023-12-10', '2 Years', 'Staff Area Bawah', 'Nur Aisyah', '1.09TB/32.0GB/ Intel® Core™ i5-9400 CPU@2.90 GHZ', '2025-12-29 07:13:04');
 
 -- --------------------------------------------------------
 
@@ -96,7 +96,7 @@ CREATE TABLE `asset_categories` (
 
 INSERT INTO `asset_categories` (`id`, `category_name`, `description`, `created_at`) VALUES
 (17, 'kkk', '', '2025-12-23 22:43:40'),
-(27, 'Desktop Computer', 'A stationary computer used for office work, data processing, and daily operations. Examples: CPU', '2025-12-28 06:13:35'),
+(27, 'Desktop Computer', 'A stationary computer used for office work, data processing, and daily operations. Examples: CPU, monitor, keyboard, mouse.', '2025-12-28 06:13:35'),
 (28, 'Laptop / Notebook', 'A portable computer used for work, study, and on-the-go tasks. Examples: Dell Latitude, HP ProBook, MacBook.', '2025-12-28 06:13:35'),
 (29, 'All-in-One PC', 'A computer with all components built into a single monitor unit to save space. Examples: iMac, HP All-in-One PC.', '2025-12-28 06:13:35'),
 (30, 'Tablet', 'A touchscreen mobile device used for browsing, presentations, and basic tasks. Examples: iPad, Samsung Galaxy Tab.', '2025-12-28 06:13:35'),
@@ -108,7 +108,7 @@ INSERT INTO `asset_categories` (`id`, `category_name`, `description`, `created_a
 (36, 'Networking & Security Equipment', 'Devices used to manage network connections and ensure system security. Examples: router, switch, firewall, CCTV camera.', '2025-12-28 06:13:35'),
 (37, 'Server & Server Accessories', 'Hardware used to store, manage, and process data for multiple users or systems. Examples: rack server, NAS, server rack, UPS.', '2025-12-28 06:13:35'),
 (38, 'Power & Electrical Equipment', 'Devices that supply, control, or protect electrical power for equipment. Examples: UPS, extension cord, power adapter.', '2025-12-28 06:13:35'),
-(39, 'Accessories & Peripherals', 'Additional devices that support main equipment functions.Example: keyboard, mouse.', '2025-12-28 06:13:35');
+(39, 'Accessories & Peripherals', 'Additional devices that support main equipment functions.', '2025-12-28 06:13:35');
 
 -- --------------------------------------------------------
 
@@ -119,29 +119,14 @@ INSERT INTO `asset_categories` (`id`, `category_name`, `description`, `created_a
 CREATE TABLE `asset_maintenance` (
   `id` int(11) NOT NULL,
   `asset_id` int(11) NOT NULL,
-  `issue_occurred` text NOT NULL,
+  `issue_title` varchar(255) NOT NULL,
+  `issue_description` text DEFAULT NULL,
   `issue_date` date NOT NULL,
-  `reported_by` varchar(100) NOT NULL,
-  `maintenance_location` varchar(150) DEFAULT NULL,
-  `additional_notes` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `action_taken` text DEFAULT NULL,
-  `date_completed` date DEFAULT NULL
+  `maintenance_status` enum('Pending','In Progress','Completed') DEFAULT 'Pending',
+  `completion_date` date DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `asset_maintenance`
---
-
-INSERT INTO `asset_maintenance` (`id`, `asset_id`, `issue_occurred`, `issue_date`, `reported_by`, `maintenance_location`, `additional_notes`, `created_at`, `action_taken`, `date_completed`) VALUES
-(11, 7, 'CPU HEAT', '2026-01-06', 'NUR FARAH BINTI AZMI', 'ABC SDN BHD', 'HEAT', '2026-01-05 06:57:27', 'UPGRADE CPU', '2026-01-09'),
-(12, 7, 'CPU HEATTT', '2026-01-06', 'NUR FARAH BINTI AZMI', 'ABC SDN BHD', 'HEAT', '2026-01-05 07:01:07', 'quuuuuuuuuuuuuu', '2026-01-09'),
-(13, 6, 'Rosak', '2026-01-07', 'NUR FARAH BINTI AZMI', 'abc sdn. bhd', 'rosak', '2026-01-05 07:32:38', 'update cpu', '2026-01-10'),
-(14, 6, 'Rosakkk', '2026-01-07', 'NUR FARAH BINTI AZMI', 'abc sdn. bhd', 'rosak', '2026-01-05 07:39:44', 'wwweee', '2026-01-09'),
-(15, 6, 'Rosakkkkkkkz', '2026-01-07', 'NUR FARAH BINTI AZMI', 'abc sdn. bhd', 'rosak', '2026-01-05 07:48:48', 'tukaaaaaaaaaaa', '2026-01-06'),
-(16, 7, 'latest maintenance', '2026-01-07', 'NUR FARAH BINTI AZMI', 'ABC SDN BHD', 'HEAT', '2026-01-05 07:57:51', 'wsdfff', '2026-01-07'),
-(17, 6, 'crack', '2026-01-07', 'NUR FARAH BINTI AZMI', 'abc sdn. bhd', 'crackk;aaaaaaaa', '2026-01-05 08:29:58', NULL, NULL),
-(18, 6, 'aaaaa', '2026-01-15', 'NUR FARAH BINTI AZMI', NULL, 'aaaaaa', '2026-01-05 08:40:00', 'ssss', '2026-01-08');
 
 -- --------------------------------------------------------
 
@@ -267,7 +252,7 @@ ALTER TABLE `asset_categories`
 -- AUTO_INCREMENT for table `asset_maintenance`
 --
 ALTER TABLE `asset_maintenance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
