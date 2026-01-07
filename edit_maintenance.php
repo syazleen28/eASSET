@@ -48,11 +48,14 @@ $mStmt = $pdo->prepare("
     SELECT *
     FROM asset_maintenance
     WHERE asset_id = ?
+      AND date_completed IS NULL
     ORDER BY created_at DESC
     LIMIT 1
 ");
+
 $mStmt->execute([$asset_id]);
 $maintenance = $mStmt->fetch(PDO::FETCH_ASSOC);
+
 
 /* =========================
    FETCH LOGGED-IN USER
@@ -112,6 +115,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['maintenance_submit'])
 ========================= */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_maintenance_submit'])) {
 
+      // 🔒 SAFETY CHECK: no open maintenance record
+    if (!$maintenance) {
+        header("Location: index_maintenance.php");
+        exit();
+    }
     $action_taken   = trim($_POST['action_taken'] ?? '');
     $date_completed = $_POST['date_completed'] ?? '';
     $new_status     = $_POST['asset_status'] ?? '';

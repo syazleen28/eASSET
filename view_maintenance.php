@@ -39,9 +39,11 @@ $mStmt = $pdo->prepare("
     SELECT *
     FROM asset_maintenance
     WHERE asset_id = ?
+      AND date_completed IS NULL
     ORDER BY created_at DESC
     LIMIT 1
 ");
+
 $mStmt->execute([$asset_id]);
 $maintenance = $mStmt->fetch(PDO::FETCH_ASSOC);
 ?>
