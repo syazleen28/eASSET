@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validation
     if ($staff_name === '') $errors['staff_name'] = "Staff Name is required.";
     if ($staff_id === '')   $errors['staff_id']   = "Staff ID is required.";
-    if ($user_id === '')    $errors['user_id']    = "User ID is required.";
     if ($email === '')      $errors['email']      = "Email is required.";
 
     // Duplicate check for staff_id and email
@@ -128,88 +127,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h5>CONFIGURATION &gt; SYSTEM USER &gt; New Record</h5>
     </div>
 
-    <?php if(!empty($errors)): ?>
-        <div class="alert alert-danger">
-            <?php foreach($errors as $e) echo htmlspecialchars($e)."<br>"; ?>
-        </div>
-    <?php endif; ?>
+    
     
 <div class="card">
     <div class="card-body">
     <form method="POST" id="userForm" novalidate>
 
-        <!-- STAFF NAME -->
-        <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label">
-                Staff Name <span class="text-danger">*</span> :
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="staff_name"
-                       class="form-control <?= isset($errors['staff_name']) ? 'is-invalid' : '' ?>"
-                       value="<?= htmlspecialchars($staff_name) ?>">
-            </div>
+    <!-- STAFF NAME -->
+    <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">
+            Staff Name <span class="text-danger">*</span> :
+        </label>
+        <div class="col-sm-10">
+            <input type="text" name="staff_name"
+                   class="form-control <?= isset($errors['staff_name']) ? 'is-invalid' : '' ?>"
+                   value="<?= htmlspecialchars($staff_name) ?>">
+            <?php if (isset($errors['staff_name'])): ?>
+                <div class="invalid-feedback">
+                    <?= htmlspecialchars($errors['staff_name']) ?>
+                </div>
+            <?php endif; ?>
         </div>
+    </div>
 
-        <!-- STAFF ID -->
-        <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label">
-                Staff ID <span class="text-danger">*</span> :
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="staff_id"
-                       id="staff_id"
-                       class="form-control <?= isset($errors['staff_id']) ? 'is-invalid' : '' ?>"
-                       value="<?= htmlspecialchars($staff_id) ?>">
-            </div>
+    <!-- STAFF ID -->
+    <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">
+            Staff ID <span class="text-danger">*</span> :
+        </label>
+        <div class="col-sm-10">
+            <input type="text" name="staff_id"
+                   id="staff_id"
+                   class="form-control <?= isset($errors['staff_id']) ? 'is-invalid' : '' ?>"
+                   value="<?= htmlspecialchars($staff_id) ?>">
+            <?php if (isset($errors['staff_id'])): ?>
+                <div class="invalid-feedback">
+                    <?= htmlspecialchars($errors['staff_id']) ?>
+                </div>
+            <?php endif; ?>
         </div>
+    </div>
 
-        <!-- USER ID -->
-        <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label">
-                User ID <span class="text-danger">*</span> :
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="user_id"
-                       id="user_id"
-                       class="form-control <?= isset($errors['user_id']) ? 'is-invalid' : '' ?>"
-                       value="<?= htmlspecialchars($user_id) ?>" readonly>
-            </div>
-        </div>
+ <!-- USER ID -->
+<div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">
+        User ID :
+    </label>
+    <div class="col-sm-10">
+        <input type="text" name="user_id"
+               id="user_id"
+               class="form-control bg-light"
+               value="<?= htmlspecialchars($user_id) ?>"
+               readonly>
+    </div>
+</div>
 
-        <!-- EMAIL -->
-        <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label">
-                Email <span class="text-danger">*</span> :
-            </label>
-            <div class="col-sm-10">
-                <input type="email" name="email"
-                       class="form-control <?= isset($errors['email']) ? 'is-invalid' : '' ?>"
-                       value="<?= htmlspecialchars($email) ?>">
-            </div>
-        </div>
 
-        <!-- POSITION -->
-        <div class="mb-3 row">
-            <label class="col-sm-2 col-form-label">
-                Position :
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="position"
-                       class="form-control"
-                       value="<?= htmlspecialchars($position) ?>">
-            </div>
+    <!-- EMAIL -->
+    <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">
+            Email <span class="text-danger">*</span> :
+        </label>
+        <div class="col-sm-10">
+            <input type="email" name="email"
+                   class="form-control <?= isset($errors['email']) ? 'is-invalid' : '' ?>"
+                   value="<?= htmlspecialchars($email) ?>">
+            <?php if (isset($errors['email'])): ?>
+                <div class="invalid-feedback">
+                    <?= htmlspecialchars($errors['email']) ?>
+                </div>
+            <?php endif; ?>
         </div>
+    </div>
 
-        <!-- BUTTONS -->
-        <div class="row">
-            <div class="col-sm-10 offset-sm-2 text-end">
-                <a href="config_user.php" class="btn btn-secondary">Back</a>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">
-                    Save
-                </button>
-            </div>
+    <!-- POSITION -->
+    <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label">
+            Position :
+        </label>
+        <div class="col-sm-10">
+            <input type="text" name="position"
+                   class="form-control"
+                   value="<?= htmlspecialchars($position) ?>">
         </div>
-    </form>
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="row">
+        <div class="col-sm-10 offset-sm-2 text-end">
+            <a href="config_user.php" class="btn btn-secondary">Back</a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmModal">
+                Save
+            </button>
+        </div>
+    </div>
+</form>
+
 </div>
 </div>
 </div>
@@ -244,6 +257,13 @@ document.getElementById('userForm').addEventListener('input', () => {
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => alert.remove());
 });
+
+document.querySelectorAll('#userForm input').forEach(input => {
+    input.addEventListener('input', function () {
+        this.classList.remove('is-invalid');
+    });
+});
+
 </script>
 
 </body>

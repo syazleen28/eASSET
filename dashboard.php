@@ -87,6 +87,21 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,.15);
 }
+
+.card-text-group {
+    margin-left: 10px;     /* move text slightly to the right */
+    text-align: left;     /* better alignment with icon */
+}
+
+.card-text-group div {
+    font-size: 19px;      /* label size */
+}
+
+.card-text-group span {
+    font-size: 40px;      /* number bigger */
+    font-weight: 700;
+}
+
 </style>
 </head>
 <body>
@@ -100,38 +115,62 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     <!-- METRICS -->
     <div class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="metrics-box text-success">
-                Available
+    <div class="metrics-box text-success">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="card-text-group">
+                <div>Available</div>
                 <span><?= $available ?></span>
             </div>
+            <img src="assets/images/available.png" alt="Available" style="width:50px; height:50px;">
         </div>
-        <div class="col-md-3">
-            <div class="metrics-box text-primary">
-                In Use
-                <span><?= $inUse ?></span>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="metrics-box text-danger">
-                Damaged
-                <span><?= $broken ?></span>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="metrics-box text-warning">
-                Maintenance
-                <span><?= $maintenance ?></span>
-            </div>
-        </div>
-    </div>
-
-    <!-- CHART -->
-    <div class="table-container">
-        <h5 class="mb-3">Assets by Category & Status</h5>
-        <canvas id="assetsChart" height="120"></canvas>
     </div>
 </div>
 
+        <div class="col-md-3">
+    <div class="metrics-box text-primary">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="card-text-group">
+                <div>In Use</div>
+                <span><?= $inUse ?></span>
+            </div>
+            <img src="assets/images/use.png" style="width:50px;height:50px;">
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <div class="metrics-box text-danger">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="card-text-group">
+                <div>Damaged</div>
+                <span><?= $broken ?></span>
+            </div>
+            <img src="assets/images/damaged.png" style="width:50px;height:50px;">
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <div class="metrics-box">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="card-text-group" style="color:#ff9800;">
+                <div>Maintenance</div>
+                <span><?= $maintenance ?></span>
+            </div>
+            <img src="assets/images/maintenance.png" style="width:50px;height:50px;">
+        </div>
+    </div>
+</div>
+
+
+    <!-- CHART -->
+    <div class="table-container">
+     <h5 class="mb-3 fw-bold">Assets by Category & Status</h5>
+
+        <canvas id="assetsChart" height="120"></canvas>
+    </div>
+</div>
+</div>   
 <script>
 new Chart(document.getElementById('assetsChart'), {
     type: 'bar',

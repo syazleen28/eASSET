@@ -67,51 +67,53 @@ $successType = $_GET['type'] ?? '';
     <?php endif; ?>
 
     <div class="mb-4">
-        <h5>CONFIGURATION &gt; System User &gt; View</h5>
+        <h5>CONFIGURATION &gt; SYSTEM USER &gt; View</h5>
     </div>
 
     <div class="card">
         <div class="card-body">
 
             <!-- STAFF NAME -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label ">Staff Name :</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" value="<?= htmlspecialchars($user['staff_name']) ?>" readonly>
-                </div>
-            </div>
+<div class="mb-3 row">
+    <label class="col-sm-2 col-form-label text-muted">Staff Name :</label>
 
-            <!-- STAFF ID -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label ">Staff ID :</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" value="<?= htmlspecialchars($user['staff_id']) ?>" readonly>
-                </div>
-            </div>
+    <div class="col-sm-10">
+        <input type="text" class="form-control bg-light" value="<?= htmlspecialchars($user['staff_name']) ?>" readonly>
+    </div>
+</div>
 
-            <!-- USER ID -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label ">User ID :</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" value="<?= htmlspecialchars($user['user_id']) ?>" readonly>
-                </div>
-            </div>
+<!-- STAFF ID -->
+<div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">Staff ID :</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control bg-light" value="<?= htmlspecialchars($user['staff_id']) ?>" readonly>
+    </div>
+</div>
 
-            <!-- EMAIL -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label ">Email :</label>
-                <div class="col-sm-10">
-                    <input type="email" class="form-control" value="<?= htmlspecialchars($user['email']) ?>" readonly>
-                </div>
-            </div>
+<!-- USER ID -->
+<div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">User ID :</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control bg-light" value="<?= htmlspecialchars($user['user_id']) ?>" readonly>
+    </div>
+</div>
 
-            <!-- POSITION -->
-            <div class="mb-3 row">
-                <label class="col-sm-2 col-form-label ">Position :</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" value="<?= htmlspecialchars($user['position']) ?>" readonly>
-                </div>
-            </div>
+<!-- EMAIL -->
+<div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">Email :</label>
+    <div class="col-sm-10">
+        <input type="email" class="form-control bg-light" value="<?= htmlspecialchars($user['email']) ?>" readonly>
+    </div>
+</div>
+
+<!-- POSITION -->
+<div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">Position :</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control bg-light" value="<?= htmlspecialchars($user['position']) ?>" readonly>
+    </div>
+</div>
+
 
             <!-- ACTION BUTTONS -->
             <div class="text-end">
