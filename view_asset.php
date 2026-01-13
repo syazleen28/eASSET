@@ -18,7 +18,7 @@ $id = (int) $_GET['id'];
 
 // Fetch asset with category
 $stmt = $pdo->prepare("
-    SELECT 
+     SELECT 
         a.id,
         a.asset_code,
         a.asset_name,
@@ -33,6 +33,10 @@ $stmt = $pdo->prepare("
         a.location,
         a.assigned_user,
         a.description,
+        a.os,
+        a.os_version,
+        a.drive_info,
+        a.spec,
         c.category_name
     FROM assets a
     LEFT JOIN asset_categories c ON a.category_id = c.id
@@ -91,13 +95,13 @@ $maintenanceRecords = $maintStmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="alert alert-success d-flex align-items-center mb-3">
             <i class="bi bi-check-circle-fill me-2"></i>
             <div>
-                <strong>Successful</strong><br>Asset saved successfully!
+                <strong>Successful</strong><br>Data saved successfully!
             </div>
         </div>
     <?php endif; ?>
 
     <div class="mb-4">
-        <h5>ASSET MANAGEMENT &gt; Assets &gt; View</h5>
+        <h5>ASSET &gt; View</h5>
     </div>
 
     <div class="card">
@@ -220,12 +224,47 @@ $maintenanceRecords = $maintStmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                     </div>
 
-                    <!-- ACTION BUTTONS -->
-                    <div class="text-end">
-                        <a href="edit_asset.php?id=<?= $asset['id'] ?>" class="btn btn-primary">Update</a>
-                        <button class="btn btn-danger" data-id="<?= $asset['id'] ?>" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
-                        <a href="index_asset.php" class="btn btn-secondary">Back</a>
+                    <?php
+                    // List of categories that require system info
+                    $systemCategories = ['All-in-One PC','Desktop Computer','Laptop / Notebook'];
+                    if (in_array($asset['category_name'], $systemCategories)):
+                    ?>
+                    <h6 class="mb-3 mt-4 fw-bold">System Information</h6>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Operating System :</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['os'] ?? '-') ?>" readonly>
+                        </div>
+
+                        <label class="col-sm-2 col-form-label">OS Version :</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['os_version'] ?? '-') ?>" readonly>
+                        </div>
                     </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Specifications :</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['spec'] ?? '-') ?>" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Drive Information :</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="2" readonly><?= htmlspecialchars($asset['drive_info'] ?? '-') ?></textarea>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+
+                                        <!-- ACTION BUTTONS -->
+                                        <div class="text-end">
+                                            <a href="edit_asset.php?id=<?= $asset['id'] ?>" class="btn btn-primary">Update</a>
+                                            <button class="btn btn-danger" data-id="<?= $asset['id'] ?>" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                                            <a href="index_asset.php" class="btn btn-secondary">Back</a>
+                                        </div>
 
                 </div> <!-- end assetTab -->
 

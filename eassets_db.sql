@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2026 at 10:14 AM
+-- Generation Time: Jan 13, 2026 at 01:31 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -66,16 +66,24 @@ CREATE TABLE `assets` (
   `location` varchar(150) DEFAULT NULL,
   `assigned_user` varchar(150) DEFAULT NULL,
   `description` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `os` varchar(100) DEFAULT NULL,
+  `os_version` varchar(50) DEFAULT NULL,
+  `drive_info` text DEFAULT NULL,
+  `spec` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `remark` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `assets`
 --
 
-INSERT INTO `assets` (`id`, `asset_code`, `category_id`, `asset_status`, `asset_name`, `brand`, `serial_number`, `supplier`, `purchase_date`, `purchase_cost`, `manufacture_date`, `warranty`, `location`, `assigned_user`, `description`, `created_at`) VALUES
-(6, 'AST-0001', 28, 'In Use', 'Dell Latitude 5420', 'Dell', 'DL5420SN001', 'ABC Technologies Sdn. Bhd', '2024-03-15', 4200.00, '2024-02-01', '3 Years', 'Staff Area Bawah', 'Ahmad Fauzi', 'Programming', '2025-12-29 07:09:48'),
-(7, 'AST-0002', 28, 'Maintenance', 'HP ProDesk 400 G7', 'HPa', 'HP400G7SN002', 'Global Tech Solutions Sdn. Bhd', '2024-01-20', 3500.00, '2023-12-10', '2 Years', 'Staff Area Bawah', 'Nur Aisyah', '1.09TB/32.0GB/ Intel® Core™ i5-9400 CPU@2.90 GHZ', '2025-12-29 07:13:04');
+INSERT INTO `assets` (`id`, `asset_code`, `category_id`, `asset_status`, `asset_name`, `brand`, `serial_number`, `supplier`, `purchase_date`, `purchase_cost`, `manufacture_date`, `warranty`, `location`, `assigned_user`, `description`, `os`, `os_version`, `drive_info`, `spec`, `created_at`, `remark`) VALUES
+(10, 'AST-0001', 27, 'In Use', 'CPU Acer TC-605', 'Acer', 'DTSRQSM0083460807B3000', 'ABC Technologies Sdn. Bhd', '2024-03-28', 2500.00, '2023-01-07', '3 Months', 'Staff Area Downstairs', 'Ahmad', 'Used for programming', 'Windows 11', 'Windows 11 Pro, 64-bit', '(C:) 143 GB free of 237 GB, (D:) 53.4 GB free of 149 GB, (E:) 763 GB free of 780 GB', '256 GB/4.00GB/12th Gen Intel® Core™ i5-12400 700 GB/4.00GB/Intel® Pentium® CPU G3220', '2026-01-12 01:53:15', NULL),
+(11, 'AST-0002', 27, 'Available', 'PC Dell I7', 'Dell', 'DLI7-2026001', 'ABC Technologies Sdn. Bhd', '2026-01-01', 6700.00, '2025-12-28', '3 Months', 'Staff Area Downstair', NULL, NULL, 'Window', 'Windows 11 Pro 64-bit', '(C:) 100 GB free of 230 GB , (D:) 223 GB free of 244 GB', '1TB/12.0GB/Intel® Core™ i7-9700 CPU@3.00 GHZ', '2026-01-12 01:59:29', NULL),
+(16, 'AST-0003', 27, 'Damaged', 'CPU HP Pavillion 7000 series', 'HP', '4CE1828WB', 'Alpha Electronics', '2025-12-29', NULL, '2025-12-11', '3 Months', 'Staff Area Downstair', NULL, NULL, 'Windows 11', 'Windows 11 Pro, 64-bit', '(C:) 97.5 GB free of 256 GB , (D:) 149 GB free of 209 GB A', '256 GB/4.00GB/12th Gen Intel® Core™ i5-12400 700 GB/4.00GB/Intel® Pentium® CPU G3220', '2026-01-12 02:05:42', 'Distrupted'),
+(17, 'AST-0004', 27, 'Maintenance', 'CPU Asus i3', 'Asus', 'SM001229096814202', 'Alpha Electronics', '2025-12-03', NULL, '2025-08-21', '3 Months', 'Staff Area Downstair', 'Nur Aisyah', 'System Analyst', 'Windows 11', 'Windows 11 Pro, 64-bit', '(C:) 147 GB free of 237 GB, (D:) 930 GB free of 931 GB', '256 GB/4.00GB/12th Gen Intel® Core™ i5-12400 700 GB/4.00GB/Intel® Pentium® CPU G3220', '2026-01-12 02:10:04', NULL),
+(18, 'AST-0005', 32, 'Available', 'Monitor Acer 20\"', 'Acer', 'MMLZ45500633059F92423', 'Beta Tech Services', '2025-07-15', 7000.00, '2025-07-02', '2 month', 'Meeting Room', NULL, NULL, NULL, NULL, NULL, NULL, '2026-01-12 02:16:48', NULL);
 
 -- --------------------------------------------------------
 
@@ -95,7 +103,6 @@ CREATE TABLE `asset_categories` (
 --
 
 INSERT INTO `asset_categories` (`id`, `category_name`, `description`, `created_at`) VALUES
-(17, 'kkk', '', '2025-12-23 22:43:40'),
 (27, 'Desktop Computer', 'A stationary computer used for office work, data processing, and daily operations. Examples: CPU', '2025-12-28 06:13:35'),
 (28, 'Laptop / Notebook', 'A portable computer used for work, study, and on-the-go tasks. Examples: Dell Latitude, HP ProBook, MacBook.', '2025-12-28 06:13:35'),
 (29, 'All-in-One PC', 'A computer with all components built into a single monitor unit to save space. Examples: iMac, HP All-in-One PC.', '2025-12-28 06:13:35'),
@@ -134,14 +141,7 @@ CREATE TABLE `asset_maintenance` (
 --
 
 INSERT INTO `asset_maintenance` (`id`, `asset_id`, `issue_occurred`, `issue_date`, `reported_by`, `maintenance_location`, `additional_notes`, `created_at`, `action_taken`, `date_completed`) VALUES
-(11, 7, 'CPU HEAT', '2026-01-06', 'NUR FARAH BINTI AZMI', 'ABC SDN BHD', 'HEAT', '2026-01-05 06:57:27', 'UPGRADE CPU', '2026-01-09'),
-(12, 7, 'CPU HEATTT', '2026-01-06', 'NUR FARAH BINTI AZMI', 'ABC SDN BHD', 'HEAT', '2026-01-05 07:01:07', 'quuuuuuuuuuuuuu', '2026-01-09'),
-(13, 6, 'Rosak', '2026-01-07', 'NUR FARAH BINTI AZMI', 'abc sdn. bhd', 'rosak', '2026-01-05 07:32:38', 'update cpu', '2026-01-10'),
-(14, 6, 'Rosakkk', '2026-01-07', 'NUR FARAH BINTI AZMI', 'abc sdn. bhd', 'rosak', '2026-01-05 07:39:44', 'wwweee', '2026-01-09'),
-(15, 6, 'Rosakkkkkkkz', '2026-01-07', 'NUR FARAH BINTI AZMI', 'abc sdn. bhd', 'rosak', '2026-01-05 07:48:48', 'tukaaaaaaaaaaa', '2026-01-06'),
-(16, 7, 'latest maintenance', '2026-01-07', 'NUR FARAH BINTI AZMI', 'ABC SDN BHD', 'HEAT', '2026-01-05 07:57:51', 'wsdfff', '2026-01-07'),
-(17, 6, 'crack', '2026-01-07', 'NUR FARAH BINTI AZMI', 'abc sdn. bhd', 'crackk;aaaaaaaa', '2026-01-05 08:29:58', NULL, NULL),
-(18, 6, 'aaaaa', '2026-01-15', 'NUR FARAH BINTI AZMI', NULL, 'aaaaaa', '2026-01-05 08:40:00', 'ssss', '2026-01-08');
+(19, 17, 'cpu heat', '2026-01-14', 'NUR FARAH BINTI AZMI', 'cds. ddn bhd', 'panas', '2026-01-12 03:12:32', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -167,7 +167,12 @@ INSERT INTO `suppliers` (`id`, `supplier_name`, `address`, `phone`, `created_at`
 (10, 'Prime Electronics Sdn. Bhd', '45, Jalan Tebrau, 80000 Johor Bahru, Johor', '013-9876543', '2025-12-28 07:25:39'),
 (11, 'Maju IT Services', '78, Jalan Skudai, 81300 Johor Bahru, Johor', '014-1122334', '2025-12-28 07:25:39'),
 (12, 'NextGen Computers', '22, Jalan Seri Alam, 81750 Masai, Johor', '011-5566778', '2025-12-28 07:25:39'),
-(13, 'Innovative Hardware Sdn. Bhd', '5, Jalan Kempas Baru, 81200 Johor Bahru, Johor', '019-3344556', '2025-12-28 07:25:39');
+(13, 'Innovative Hardware Sdn. Bhd', '5, Jalan Kempas Baru, 81200 Johor Bahru, Johor', '019-3344556', '2025-12-28 07:25:39'),
+(14, 'TechWorld Sdn. Bhd', '10, Jalan Permas Jaya, 81750 Johor Bahru, Johor', '011-2233445', '2026-01-11 23:33:23'),
+(15, 'Vision IT Solutions', '55, Jalan Molek 1/2, 81100 Johor Bahru, Johor', '012-3344556', '2026-01-11 23:33:23'),
+(16, 'Alpha Electronics', '33, Jalan Dato Onn, 80000 Johor Bahru, Johor', '013-4455667', '2026-01-11 23:33:23'),
+(17, 'Beta Tech Services', '21, Jalan Taman Sutera, 81300 Johor Bahru, Johor', '014-5566778', '2026-01-11 23:33:23'),
+(18, 'Gamma IT Solutions', '77, Jalan Seri Alam, 81750 Masai, Johor', '019-6677889', '2026-01-11 23:33:23');
 
 -- --------------------------------------------------------
 
@@ -255,7 +260,7 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `assets`
 --
 ALTER TABLE `assets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `asset_categories`
@@ -267,13 +272,13 @@ ALTER TABLE `asset_categories`
 -- AUTO_INCREMENT for table `asset_maintenance`
 --
 ALTER TABLE `asset_maintenance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `users`

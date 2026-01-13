@@ -320,6 +320,38 @@ $showSuccess = isset($_GET['success']) && $_GET['success'] == 1;
                     <textarea class="form-control" rows="3" readonly><?= htmlspecialchars($asset['description'] ?? '-') ?></textarea>
                 </div>
             </div>
+<?php
+// Only show System Information if asset has system fields
+$hasSystemInfo = !empty($asset['os']) || !empty($asset['os_version']) || !empty($asset['drive_info']) || !empty($asset['spec']);
+if ($hasSystemInfo): 
+?>
+<h6 class="mb-3 mt-4 fw-bold">System Information</h6>
+
+<div class="row mb-3">
+    <label class="col-sm-2 col-form-label">Operating System :</label>
+    <div class="col-sm-4">
+        <input type="text" class="form-control" value="<?= htmlspecialchars($asset['os'] ?? '-') ?>" readonly>
+    </div>
+    <label class="col-sm-2 col-form-label">OS Version :</label>
+    <div class="col-sm-4">
+        <input type="text" class="form-control" value="<?= htmlspecialchars($asset['os_version'] ?? '-') ?>" readonly>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <label class="col-sm-2 col-form-label">Specifications :</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" value="<?= htmlspecialchars($asset['spec'] ?? '-') ?>" readonly>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <label class="col-sm-2 col-form-label">Drive Information :</label>
+    <div class="col-sm-10">
+        <textarea class="form-control" rows="2" readonly><?= htmlspecialchars($asset['drive_info'] ?? '-') ?></textarea>
+    </div>
+</div>
+<?php endif; ?>
 
        
 

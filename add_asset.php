@@ -45,7 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fields = [
         'category_id','asset_status','asset_name','brand',
         'serial_number','supplier','purchase_date','purchase_cost',
-        'manufacture_date','warranty','location','assigned_user','description'
+        'manufacture_date','warranty','location','assigned_user','description',
+        'os','os_version','drive_info','spec' , 'remark'
     ];
 
     foreach ($fields as $field) {
@@ -79,38 +80,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* ===== INSERT ===== */
     if (empty($errors)) {
-        $stmt = $pdo->prepare("
-            INSERT INTO assets (
-                asset_code,
-                category_id, asset_status, asset_name, brand,
-                serial_number, supplier, purchase_date, purchase_cost,
-                manufacture_date, warranty, location,
-                assigned_user, description
-            ) VALUES (
-                :asset_code,
-                :category_id, :asset_status, :asset_name, :brand,
-                :serial_number, :supplier, :purchase_date, :purchase_cost,
-                :manufacture_date, :warranty, :location,
-                :assigned_user, :description
-            )
-        ");
+       $stmt = $pdo->prepare("
+    INSERT INTO assets (
+        asset_code, category_id, asset_status, asset_name, brand,
+        serial_number, supplier, purchase_date, purchase_cost,
+        manufacture_date, warranty, location,
+        assigned_user, description, os, os_version, drive_info, spec, remark
+    ) VALUES (
+        :asset_code, :category_id, :asset_status, :asset_name, :brand,
+        :serial_number, :supplier, :purchase_date, :purchase_cost,
+        :manufacture_date, :warranty, :location,
+        :assigned_user, :description, :os, :os_version, :drive_info, :spec, :remark
+    )
+");
 
-        $stmt->execute([
-            ':asset_code'        => $assetCode,
-            ':category_id'       => $data['category_id'],
-            ':asset_status'      => $data['asset_status'],
-            ':asset_name'        => $data['asset_name'],
-            ':brand'             => $data['brand'] ?: null,
-            ':serial_number'     => $data['serial_number'] ?: null,
-            ':supplier'          => $data['supplier'] ,
-            ':purchase_date'     => $data['purchase_date'] ?: null,
-            ':purchase_cost'     => $data['purchase_cost'] ?: null,
-            ':manufacture_date'  => $data['manufacture_date'] ?: null,
-            ':warranty'          => $data['warranty'] ?: null,
-            ':location'          => $data['location'] ?: null,
-            ':assigned_user'     => $data['assigned_user'] ?: null,
-            ':description'       => $data['description'] ?: null
-        ]);
+$stmt->execute([
+    ':asset_code'        => $assetCode,
+    ':category_id'       => $data['category_id'],
+    ':asset_status'      => $data['asset_status'],
+    ':asset_name'        => $data['asset_name'],
+    ':brand'             => $data['brand'] ?: null,
+    ':serial_number'     => $data['serial_number'] ?: null,
+    ':supplier'          => $data['supplier'],
+    ':purchase_date'     => $data['purchase_date'] ?: null,
+    ':purchase_cost'     => $data['purchase_cost'] ?: null,
+    ':manufacture_date'  => $data['manufacture_date'] ?: null,
+    ':warranty'          => $data['warranty'] ?: null,
+    ':location'          => $data['location'] ?: null,
+    ':assigned_user'     => $data['assigned_user'] ?: null,
+    ':description'       => $data['description'] ?: null,
+    ':os'                => $data['os'] ?: null,
+    ':os_version'        => $data['os_version'] ?: null,
+    ':drive_info'        => $data['drive_info'] ?: null,
+    ':spec'              => $data['spec'] ?: null,
+    ':remark'            => $data['remark'] ?: null
+]);
+
 
         $id = $pdo->lastInsertId();
         header("Location: view_asset.php?id=" . $id . "&success=1");
@@ -269,10 +274,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <div class="row mb-3">
-    <label class="col-sm-2 col-form-label">Description :</label>
+    <label class="col-sm-2 col-form-label">Used For :</label>
     <div class="col-sm-10">
         <textarea name="description" class="form-control" rows="3"><?= htmlspecialchars($data['description'] ?? '') ?></textarea>
     </div>
+</div>
+
+<div class="row mb-3">
+    <label class="col-sm-2 col-form-label">Remark :</label>
+    <div class="col-sm-10">
+        <textarea name="remark" class="form-control" rows="3"><?= htmlspecialchars($data['remark'] ?? '') ?></textarea>
+    </div>
+</div>
+
+<!-- System Information (only for PC/Laptop categories) -->
+<div id="systemInfo" class="mt-4" style="display:none;">
+    <h6 class="mb-3 fw-bold">System Information</h6>
+    
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Operating System :</label>
+        <div class="col-sm-4">
+            <input type="text" name="os" class="form-control" value="<?= htmlspecialchars($data['os'] ?? '') ?>">
+        </div>
+
+        <label class="col-sm-2 col-form-label">OS Version :</label>
+        <div class="col-sm-4">
+            <input type="text" name="os_version" class="form-control" value="<?= htmlspecialchars($data['os_version'] ?? '') ?>">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Specifications :</label>
+        <div class="col-sm-10">
+            <input type="text" name="spec" class="form-control" value="<?= htmlspecialchars($data['spec'] ?? '') ?>">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Drive Information :</label>
+        <div class="col-sm-10">
+            <textarea name="drive_info" class="form-control" rows="2"><?= htmlspecialchars($data['drive_info'] ?? '') ?></textarea>
+        </div>
+    </div>
+
+
 </div>
 
 <div class="text-end">
@@ -293,7 +337,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="modal-content">
       <div class="modal-body text-center p-4">
         <i class="bi bi-exclamation-circle text-warning" style="font-size: 4rem;"></i>
-        <p class="mt-3">Are you sure you want to save this asset?</p>
+        <p class="mt-3">Are you sure to save?
+        </p>
 
         <button type="button" class="btn btn-primary" id="confirmSave">Save</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
@@ -308,6 +353,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 document.getElementById('confirmSave').addEventListener('click', function () {
     document.getElementById('assetForm').submit();
 });
+</script>
+<script>
+const categorySelect = document.querySelector('select[name="category_id"]');
+const systemInfoDiv = document.getElementById('systemInfo');
+
+// List of category names that require system info
+const systemCategories = [
+    'All-in-One PC',
+    'Desktop Computer',
+    'Laptop / Notebook'
+];
+
+function toggleSystemInfo() {
+    const selectedOption = categorySelect.options[categorySelect.selectedIndex].text;
+    if (systemCategories.includes(selectedOption)) {
+        systemInfoDiv.style.display = 'block';
+    } else {
+        systemInfoDiv.style.display = 'none';
+    }
+}
+
+// Run on change
+categorySelect.addEventListener('change', toggleSystemInfo);
+
+// Run on page load in case a category is already selected (edit form)
+window.addEventListener('DOMContentLoaded', toggleSystemInfo);
 </script>
 
 </body>

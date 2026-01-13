@@ -90,103 +90,138 @@ $maintenance = $mStmt->fetch(PDO::FETCH_ASSOC);
                 </li>
                 <li class="nav-item">
                     <button class="nav-link <?= $activeTab === 'maintenance' ? 'active' : '' ?>" data-bs-toggle="tab" data-bs-target="#maintenanceTab">
-                        Maintenance Information
+                        Issues Information
                     </button>
                 </li>
                 <li class="nav-item">
                     <button class="nav-link <?= $activeTab === 'post-maintenance' ? 'active' : '' ?>" data-bs-toggle="tab" data-bs-target="#postMaintenanceTab">
-                        Post-Maintenance
+                        Maintenance Information
                     </button>
                 </li>
             </ul>
 
             <div class="tab-content">
                 <!-- ================= TAB 1 : ASSET INFO ================= -->
-                <div class="tab-pane fade <?= $activeTab === 'asset' ? 'show active' : '' ?>" id="assetTab">
-                    <h6 class="mb-3 fw-bold">Asset Information</h6>
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Asset Code :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['asset_code']) ?>" readonly>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Asset Category :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['category_name'] ?? '-') ?>" readonly>
-                        </div>
-                    </div>
+<div class="tab-pane fade <?= $activeTab === 'asset' ? 'show active' : '' ?>" id="assetTab">
+    <h6 class="mb-3 fw-bold">Asset Information</h6>
 
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Asset Status :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['asset_status']) ?>" readonly>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Asset Name / Model :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['asset_name']) ?>" readonly>
-                        </div>
-                    </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Asset Code :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['asset_code']) ?>" readonly>
+        </div>
+        <label class="col-sm-2 col-form-label">Asset Category :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['category_name'] ?? '-') ?>" readonly>
+        </div>
+    </div>
 
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Brand :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['brand'] ?? '-') ?>" readonly>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Serial Number :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['serial_number'] ?? '-') ?>" readonly>
-                        </div>
-                    </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Asset Status :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['asset_status']) ?>" readonly>
+        </div>
+        <label class="col-sm-2 col-form-label">Asset Name / Model :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['asset_name']) ?>" readonly>
+        </div>
+    </div>
 
-                    <h6 class="mb-3 mt-4 fw-bold">Purchase Information</h6>
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Supplier :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['supplier'] ?? '-') ?>" readonly>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Purchase Date :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['purchase_date'] ?? '-') ?>" readonly>
-                        </div>
-                    </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Brand :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['brand'] ?? '-') ?>" readonly>
+        </div>
+        <label class="col-sm-2 col-form-label">Serial Number :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['serial_number'] ?? '-') ?>" readonly>
+        </div>
+    </div>
 
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Purchase Cost (RM) :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['purchase_cost'] ?? '-') ?>" readonly>
-                        </div>
-                    </div>
+    <h6 class="mb-3 mt-4 fw-bold">Purchase Information</h6>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Supplier :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['supplier'] ?? '-') ?>" readonly>
+        </div>
+        <label class="col-sm-2 col-form-label">Purchase Date :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['purchase_date'] ?? '-') ?>" readonly>
+        </div>
+    </div>
 
-                    <h6 class="mb-3 mt-4 fw-bold">Manufacture & Warranty</h6>
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Manufacture Date :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['manufacture_date'] ?? '-') ?>" readonly>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Warranty :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['warranty'] ?? '-') ?>" readonly>
-                        </div>
-                    </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Purchase Cost (RM) :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['purchase_cost'] ?? '-') ?>" readonly>
+        </div>
+    </div>
 
-                    <h6 class="mb-3 mt-4 fw-bold">Assignment Information</h6>
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Location :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['location'] ?? '-') ?>" readonly>
-                        </div>
-                        <label class="col-sm-2 col-form-label">Assigned User :</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['assigned_user'] ?? '-') ?>" readonly>
-                        </div>
-                    </div>
+    <h6 class="mb-3 mt-4 fw-bold">Manufacture & Warranty</h6>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Manufacture Date :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['manufacture_date'] ?? '-') ?>" readonly>
+        </div>
+        <label class="col-sm-2 col-form-label">Warranty :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['warranty'] ?? '-') ?>" readonly>
+        </div>
+    </div>
 
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Description :</label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control" rows="3" readonly><?= htmlspecialchars($asset['description'] ?? '-') ?></textarea>
-                        </div>
-                    </div>
-                </div>
+    <h6 class="mb-3 mt-4 fw-bold">Assignment Information</h6>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Location :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['location'] ?? '-') ?>" readonly>
+        </div>
+        <label class="col-sm-2 col-form-label">Assigned User :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['assigned_user'] ?? '-') ?>" readonly>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Description :</label>
+        <div class="col-sm-10">
+            <textarea class="form-control" rows="3" readonly><?= htmlspecialchars($asset['description'] ?? '-') ?></textarea>
+        </div>
+    </div>
+
+    <!-- ================= SYSTEM INFORMATION ================= -->
+    <?php 
+    $hasSystemInfo = !empty($asset['os']) || !empty($asset['os_version']) || !empty($asset['drive_info']) || !empty($asset['spec']);
+    if ($hasSystemInfo): 
+    ?>
+    <h6 class="mb-3 mt-4 fw-bold">System Information</h6>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Operating System :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['os'] ?? '-') ?>" readonly>
+        </div>
+        <label class="col-sm-2 col-form-label">OS Version :</label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['os_version'] ?? '-') ?>" readonly>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Specifications :</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" value="<?= htmlspecialchars($asset['spec'] ?? '-') ?>" readonly>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Drive Information :</label>
+        <div class="col-sm-10">
+            <textarea class="form-control" rows="2" readonly><?= htmlspecialchars($asset['drive_info'] ?? '-') ?></textarea>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>
+<!-- ================= END ASSET INFO TAB ================= -->
 
                 <!-- ================= TAB 2 : MAINTENANCE INFO ================= -->
                 <div class="tab-pane fade <?= $activeTab === 'maintenance' ? 'show active' : '' ?>" id="maintenanceTab">
