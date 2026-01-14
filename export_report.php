@@ -98,7 +98,7 @@ $columns = range('A', 'Z');
 
 // ----------------- COMPANY TITLE -----------------
 $sheet->mergeCells('A1:' . $columns[$totalColumns - 1] . '1');
-$sheet->setCellValue('A1', 'RN TECHNOLOGIES SDN. BHD.0');
+$sheet->setCellValue('A1', 'RN TECHNOLOGIES SDN. BHD.');
 $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(18);
 $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 $sheet->getStyle('A1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
